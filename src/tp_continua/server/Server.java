@@ -29,8 +29,8 @@ public class Server extends Thread implements IncomingTCPTransmissionEvent.Incom
 
     @Override
     public void incomingTCPTransmission(IncomingTCPTransmissionEvent event) {
-        if (event.getMessage().equals(ConnectionManager.QUERY_PORT)) {
-
+        if (event.getMessage().equals(ConnectionManager.QUERY_FILES)) {
+            executorService.submit(new ListFiles(connectionManager, fileSystem.getIndex(), event.getSource()));
         } else if (event.getMessage().equals(ConnectionManager.DOWNLOAD_FILE)) {
             executorService.submit(new UploadFile(event.getSocket(), fileSystem));
         } else {
