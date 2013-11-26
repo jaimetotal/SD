@@ -1,14 +1,10 @@
 package tp_continua.client;
 
-import org.apache.commons.io.IOUtils;
 import tp_continua.ConnectionManager;
 import tp_continua.File;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,27 +15,22 @@ import java.net.Socket;
  */
 public class Download implements Runnable {
 
-    private Socket socket;
     private File file;
     private Client client;
+    private ClientConnectionManager connectionManager;
 
-    public Download(ConnectionManager connectionManager, File file, Client client) {
+    public Download(ClientConnectionManager connectionManager, File file, Client client) {
         this.client = client;
-        this.socket = connectionManager.getSocketToServer(file.getNode());
         this.file = file;
+        this.connectionManager = connectionManager;
     }
 
     @Override
     public void run() {
-        byte[] fileDownload;
-        try {
-            PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
-            out.println(ConnectionManager.DOWNLOAD_FILE);
-            out.println(file.getFileName());
-            fileDownload = fetchContents();
-
-            if (fileDownload != null) {
-                file.setContents(fileDownload);
+        String command = String.format("%s\n%s", ConnectionManager.DOWNLOAD_FILE, file.getFileName());
+        try (ByteArrayOutputStream stream = connectionManager.getOutputStream(file.getNode(), command)) {
+            if (stream.size() > 0) {
+                file.setContents(stream.toByteArray());
                 client.downloadCompleted(new DownloadCompletedEvent(file));
             } else {
                 client.downloadFailed(new DownloadFailedEvent(file));
@@ -47,23 +38,7 @@ public class Download implements Runnable {
 
         } catch (IOException e) {
             e.printStackTrace();
-            //TODO Treat exception
+//TODO Treat exception
         }
-
-    }
-
-    private byte[] fetchContents() {
-        InputStream in;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            in = socket.getInputStream();
-            IOUtils.copy(in, out);
-            socket.close();
-            out.close();
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        return out.toByteArray();  //To change body of created methods use File | Settings | File Templates.
     }
 }

@@ -37,7 +37,7 @@ public class ServerConnectionManager extends ConnectionManager {
                     //Waits for a client to connect and fires the event. The event will be responsible to close socket
                     Socket incomingSocket = socketServer.accept();
                     Peer client = new Peer(incomingSocket.getInetAddress(), incomingSocket.getPort());
-
+                    //TODO Catch whatever
                     BufferedReader stdIn = new BufferedReader(new BufferedReader(null));
                     String message = stdIn.readLine();
                     stdIn.close();

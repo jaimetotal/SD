@@ -21,7 +21,7 @@ public class ListFiles implements Runnable {
     private Index index;
 
     public ListFiles(ConnectionManager connectionManager, Index index, Peer node) {
-        this.socket = connectionManager.getSocketToServer(node);
+        this.socket = connectionManager.getTCPSocketToPeer(node);
         this.index = index;
     }
 

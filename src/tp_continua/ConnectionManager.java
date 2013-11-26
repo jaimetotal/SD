@@ -29,7 +29,8 @@ public class ConnectionManager {
         String port = System.getProperty("port.listen");
     }
 
-    public Socket getSocketToServer(Peer node) {
+
+    public Socket getTCPSocketToPeer(Peer node) {
         try {
             //TODO Query port for stream
             Socket socket = new Socket(node.getAddress().toString(), node.getPort());
@@ -39,8 +40,6 @@ public class ConnectionManager {
         }
         return null;
     }
-
-
 
 
 }

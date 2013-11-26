@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" name="Default" comment="" />
+    <list default="true" id="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/client/ClientConnectionManager.java" afterPath="$PROJECT_DIR$/src/tp_continua/client/ClientConnectionManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/ConnectionManager.java" afterPath="$PROJECT_DIR$/src/tp_continua/ConnectionManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/client/Download.java" afterPath="$PROJECT_DIR$/src/tp_continua/client/Download.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/server/ListFiles.java" afterPath="$PROJECT_DIR$/src/tp_continua/server/ListFiles.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/client/QueryFiles.java" afterPath="$PROJECT_DIR$/src/tp_continua/client/QueryFiles.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/server/Server.java" afterPath="$PROJECT_DIR$/src/tp_continua/server/Server.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/server/ServerConnectionManager.java" afterPath="$PROJECT_DIR$/src/tp_continua/server/ServerConnectionManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="SD_Exe.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Client.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1385157359312" ignored="false" />
     <file path="/Main.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1383685956821" ignored="false" />
     <file path="/fragment.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384898621725" ignored="false" />
-    <file path="/Dummy.txt" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1385501743861" ignored="false" />
-    <file path="/Server.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1385157371967" ignored="false" />
+    <file path="/Dummy.txt" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1385501854826" ignored="false" />
+    <file path="/Server.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1385503228276" ignored="false" />
     <file path="/QuoteClient.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1383685624717" ignored="false" />
     <file path="/ClockMaste.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1383687410066" ignored="false" />
     <file path="/Clock.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1383690436135" ignored="false" />
     <file path="/ClockMaster.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384812799707" ignored="false" />
     <file path="/a.dummy" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384898007847" ignored="false" />
-    <file path="/Download.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384899842401" ignored="false" />
-    <file path="/ConnectionManager.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384897273800" ignored="false" />
+    <file path="/Download.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1385503161420" ignored="false" />
+    <file path="/ConnectionManager.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1385502931033" ignored="false" />
     <file path="/FileSystem.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384898659488" ignored="false" />
     <file path="/File.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384898827153" ignored="false" />
     <file path="/Peer.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384818987958" ignored="false" />
@@ -28,13 +38,14 @@
     <file path="/QueryCompleted.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384732536999" ignored="false" />
     <file path="/QueryFailedEvent.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384732111212" ignored="false" />
     <file path="/QueryDispatcher.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384732145115" ignored="false" />
-    <file path="/QueryFiles.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384819775648" ignored="false" />
+    <file path="/QueryFiles.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1385502961302" ignored="false" />
     <file path="/FileAlreadyDownloadingException.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384811356130" ignored="false" />
-    <file path="/ServerConnectionManager.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384899383561" ignored="false" />
+    <file path="/ServerConnectionManager.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1385502020577" ignored="false" />
     <file path="/IncomingTransmissionEvent.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384896596003" ignored="false" />
     <file path="/IncomingUDPTransmissionEvent.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384896650803" ignored="false" />
     <file path="/IncomingTCPTransmissionEvent.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384897773236" ignored="false" />
     <file path="/UploadFile.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1384899061623" ignored="false" />
+    <file path="/ClientConnectionManager.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1385503136580" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +109,7 @@
       <file leaf-file-name="Client.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/tp_continua/client/Client.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="34" selection-start="333" selection-end="333" vertical-scroll-proportion="0.0">
+            <state line="30" column="27" selection-start="1284" selection-end="1284" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -107,16 +118,16 @@
       <file leaf-file-name="Download.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/tp_continua/client/Download.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="75" selection-start="599" selection-end="599" vertical-scroll-proportion="0.0">
+            <state line="26" column="0" selection-start="639" selection-end="639" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ConnectionManager.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/tp_continua/ConnectionManager.java">
+      <file leaf-file-name="ServerConnectionManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/tp_continua/server/ServerConnectionManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="57" selection-start="512" selection-end="523" vertical-scroll-proportion="0.0">
+            <state line="76" column="44" selection-start="3085" selection-end="3085" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -125,25 +136,45 @@
       <file leaf-file-name="Server.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/tp_continua/server/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="34" selection-start="288" selection-end="288" vertical-scroll-proportion="0.0">
+            <state line="32" column="43" selection-start="1198" selection-end="1198" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="QuoteClient.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/aula6/unicast/QuoteClient.java">
+      <file leaf-file-name="ConnectionManager.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/tp_continua/ConnectionManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="58" column="6" selection-start="2381" selection-end="2407" vertical-scroll-proportion="0.0">
+            <state line="42" column="0" selection-start="1098" selection-end="1098" vertical-scroll-proportion="0.9371534">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ListFiles.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ListFiles.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/tp_continua/server/ListFiles.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="11" selection-start="662" selection-end="662" vertical-scroll-proportion="0.49821427">
+            <state line="23" column="58" selection-start="553" selection-end="571" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ClientConnectionManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/tp_continua/client/ClientConnectionManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="17" column="0" selection-start="362" selection-end="362" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="QueryFiles.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/tp_continua/client/QueryFiles.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="21" column="35" selection-start="487" selection-end="487" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -168,22 +199,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/tp_continua/client/FileAlreadyDownloadingException.java" />
         <option value="$PROJECT_DIR$/src/aula7/ClockMaster.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/Peer.java" />
-        <option value="$PROJECT_DIR$/src/tp_continua/client/QueryFiles.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/server/IncomingTransmissionEvent.java" />
-        <option value="$PROJECT_DIR$/src/tp_continua/ConnectionManager.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/server/IncomingTCPTransmissionEvent.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/server/IncomingUDPTransmissionEvent.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/FileSystem.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/File.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/server/UploadFile.java" />
-        <option value="$PROJECT_DIR$/src/tp_continua/server/ServerConnectionManager.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/server/ListFiles.java" />
-        <option value="$PROJECT_DIR$/src/tp_continua/client/Download.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/client/Client.java" />
+        <option value="$PROJECT_DIR$/src/tp_continua/server/ServerConnectionManager.java" />
+        <option value="$PROJECT_DIR$/src/tp_continua/client/QueryFiles.java" />
+        <option value="$PROJECT_DIR$/src/tp_continua/client/Download.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/server/Server.java" />
+        <option value="$PROJECT_DIR$/src/tp_continua/client/ClientConnectionManager.java" />
+        <option value="$PROJECT_DIR$/src/tp_continua/ConnectionManager.java" />
       </list>
     </option>
   </component>
@@ -226,7 +257,7 @@
     <ConfirmationsSetting value="2" id="Remove" />
   </component>
   <component name="ProjectReloadState">
-    <option name="STATE" value="0" />
+    <option name="STATE" value="2" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
@@ -241,8 +272,8 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -413,12 +444,12 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="MemberChooser.showClasses" value="true" />
     <property name="FullScreen" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
@@ -479,19 +510,6 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method />
-    </configuration>
     <configuration default="true" type="XSLT" factoryName="XSLT">
       <option name="myOutputFile" />
       <option name="myOpenOutputFile" value="false" />
@@ -506,6 +524,19 @@
       <OutputType value="CONSOLE" save-to-file="false" />
       <FileType name="XML" />
       <JdkChoice value="FROM_MODULE" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -672,24 +703,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/tp_continua/server/IncomingTransmissionEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="64" selection-start="643" selection-end="659" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/tp_continua/server/IncomingTCPTransmissionEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="4" selection-start="581" selection-end="738" vertical-scroll-proportion="0.8170056">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/tp_continua/server/IncomingUDPTransmissionEvent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="48" selection-start="418" selection-end="575" vertical-scroll-proportion="0.69246435">
@@ -718,6 +731,20 @@
         <state line="33" column="13" selection-start="1640" selection-end="1640" vertical-scroll-proportion="0.6975089" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/aula6/unicast/QuoteClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="58" column="6" selection-start="2381" selection-end="2407" vertical-scroll-proportion="0.51428574">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tp_continua/client/Client.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="27" selection-start="1284" selection-end="1284" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/tp_continua/server/UploadFile.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="30" column="12" selection-start="640" selection-end="756" vertical-scroll-proportion="0.5142349">
@@ -727,65 +754,67 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/tp_continua/client/ClientConnectionManager.java">
+    <entry file="jar://C:/Program Files (x86)/Java/jdk1.7.0_11/src.zip!/java/io/ByteArrayInputStream.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="36" selection-start="188" selection-end="188" vertical-scroll-proportion="0.0">
+        <state line="102" column="11" selection-start="2836" selection-end="2836" vertical-scroll-proportion="0.33271718">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/tp_continua/server/ServerConnectionManager.java">
+    <entry file="jar://C:/Program Files (x86)/Java/jdk1.7.0_11/src.zip!/java/io/ObjectInputStream.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="55" selection-start="726" selection-end="726" vertical-scroll-proportion="0.0">
+        <state line="348" column="14" selection-start="15889" selection-end="15889" vertical-scroll-proportion="0.3456562">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/tp_continua/client/QueryFiles.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="22" selection-start="538" selection-end="538" vertical-scroll-proportion="0.0">
+        <state line="21" column="35" selection-start="487" selection-end="487" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/tp_continua/client/Download.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="75" selection-start="599" selection-end="599" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/tp_continua/client/Client.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="34" selection-start="333" selection-end="333" vertical-scroll-proportion="0.0">
+        <state line="26" column="0" selection-start="639" selection-end="639" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/tp_continua/server/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="34" selection-start="288" selection-end="288" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/aula6/unicast/QuoteClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="6" selection-start="2381" selection-end="2407" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/tp_continua/ConnectionManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="57" selection-start="512" selection-end="523" vertical-scroll-proportion="0.0">
+        <state line="32" column="43" selection-start="1198" selection-end="1198" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/tp_continua/server/ListFiles.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="11" selection-start="662" selection-end="662" vertical-scroll-proportion="0.49821427">
+        <state line="23" column="58" selection-start="553" selection-end="571" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tp_continua/server/ServerConnectionManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="76" column="44" selection-start="3085" selection-end="3085" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tp_continua/client/ClientConnectionManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="0" selection-start="362" selection-end="362" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tp_continua/ConnectionManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="0" selection-start="1098" selection-end="1098" vertical-scroll-proportion="0.9371534">
           <folding />
         </state>
       </provider>
