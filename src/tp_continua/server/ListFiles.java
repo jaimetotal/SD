@@ -1,8 +1,6 @@
 package tp_continua.server;
 
-import tp_continua.ConnectionManager;
 import tp_continua.Index;
-import tp_continua.Peer;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -20,8 +18,8 @@ public class ListFiles implements Runnable {
     private Socket socket;
     private Index index;
 
-    public ListFiles(ConnectionManager connectionManager, Index index, Peer node) {
-        this.socket = connectionManager.getTCPSocketToPeer(node);
+    public ListFiles(Socket socket, Index index) {
+        this.socket = socket;
         this.index = index;
     }
 

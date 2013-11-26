@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.Scanner;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,21 +31,21 @@ public class QueryFiles implements Runnable {
     @Override
     public void run() {
         try {
-            //TODO Receive socket from the ConnectionManager
-            DatagramSocket responseSocket = new DatagramSocket(4547);
-            //TODO Revise timeout
-            responseSocket.setSoTimeout(1000);
-            //TODO Revise buffer size
-            byte[] responseBuf = new byte[256];
+            //TODO check nulls
+            DatagramSocket responseSocket = connectionManager.getUDPSocket();
+            connectionManager.sendMulticast(ConnectionManager.QUERY_FILES);
+            //Receives ConnectionManager.QUERY_FILES_ACK + PORT SIZE + \n
+            byte[] responseBuf = new byte[ConnectionManager.QUERY_FILES_ACK.length() + 5];
             DatagramPacket packet = new DatagramPacket(responseBuf, responseBuf.length);
 
             boolean timeOut = false;
             while (!timeOut) {
                 try {
                     responseSocket.receive(packet);
-                    //TODO Define message
-                    if (packet.getData().toString().equals("QUERYFILES_OK_1989")) {
-                        new Thread(new FetchQuery(new Peer(packet.getAddress(), packet.getPort())));
+                    String messageReceived = packet.getData().toString();
+                    if (messageReceived.startsWith(ConnectionManager.QUERY_FILES_ACK)) {
+                        int port = new Scanner(messageReceived).nextInt();
+                        new Thread(new FetchQuery(new Peer(packet.getAddress(), port)));
                     }
                 } catch (java.net.SocketTimeoutException ex) {
                     timeOut = true;

@@ -15,7 +15,7 @@ import java.util.concurrent.*;
 public class Server extends Thread implements IncomingTCPTransmissionEvent.IncomingTCPTransmissionEventListener, IncomingUDPTransmissionEvent.IncomingUDPTransmissionEventListener {
 
     private ExecutorService executorService;
-    private ConnectionManager connectionManager;
+    private ServerConnectionManager connectionManager;
     private FileSystem fileSystem;
     private BlockingQueue<Runnable> threadQueue;
 
@@ -30,7 +30,7 @@ public class Server extends Thread implements IncomingTCPTransmissionEvent.Incom
     @Override
     public void incomingTCPTransmission(IncomingTCPTransmissionEvent event) {
         if (event.getMessage().equals(ConnectionManager.QUERY_FILES)) {
-            executorService.submit(new ListFiles(connectionManager, fileSystem.getIndex(), event.getSource()));
+            executorService.submit(new ListFiles(event.getSocket(), fileSystem.getIndex()));
         } else if (event.getMessage().equals(ConnectionManager.DOWNLOAD_FILE)) {
             executorService.submit(new UploadFile(event.getSocket(), fileSystem));
         } else {
@@ -41,7 +41,7 @@ public class Server extends Thread implements IncomingTCPTransmissionEvent.Incom
     @Override
     public void incomingUDPTransmission(IncomingUDPTransmissionEvent event) {
         if (event.getMessage().equals(ConnectionManager.QUERY_FILES)) {
-            executorService.submit(new ListFiles(connectionManager, fileSystem.getIndex(), event.getSource()));
+          executorService.submit(new Acknowledge(connectionManager, event.getSource()));
         } else {
             //TODO report error?
         }

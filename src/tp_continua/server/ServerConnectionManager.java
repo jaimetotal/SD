@@ -33,7 +33,7 @@ public class ServerConnectionManager extends ConnectionManager {
         public void run() {
             do {
                 try {
-                    ServerSocket socketServer = new ServerSocket(ConnectionManager.SERVER_PORT);
+                    ServerSocket socketServer = new ServerSocket(ConnectionManager.SERVER_TCP_PORT);
                     //Waits for a client to connect and fires the event. The event will be responsible to close socket
                     Socket incomingSocket = socketServer.accept();
                     Peer client = new Peer(incomingSocket.getInetAddress(), incomingSocket.getPort());

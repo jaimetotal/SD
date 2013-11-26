@@ -1,10 +1,11 @@
 package tp_continua.client;
 
-import tp_continua.ConnectionManager;
 import tp_continua.File;
 import tp_continua.FileSystem;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.*;
 
 /**
@@ -17,7 +18,7 @@ import java.util.concurrent.*;
 public class Client extends Thread implements DownloadCompletedEvent.DownloadCompletedEventListener, DownloadFailedEvent.DownloadFailedEventListener, DownloadManagerDispatcher, QueryDispatcher, QueryFailedEvent.QueryFailedEventListener, QueryCompletedEvent.QueryCompletedEventListener {
 
     private ExecutorService executorService;
-    private ConnectionManager connectionManager;
+    private ClientConnectionManager connectionManager;
     private FileSystem fileSystem;
     private List<DownloadCompletedEvent.DownloadCompletedEventListener> downloadCompletedEventListener;
     private List<DownloadFailedEvent.DownloadFailedEventListener> downloadFailedEventListeners;
@@ -29,6 +30,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
 
     public Client(FileSystem fileSystem) {
         //TODO review sizes
+        this.connectionManager = new ClientConnectionManager();
         threadQueue = new ArrayBlockingQueue<Runnable>(Integer.MAX_VALUE);
         this.executorService = new ThreadPoolExecutor(5, 5, Long.MAX_VALUE, TimeUnit.DAYS, threadQueue);
         this.fileSystem = fileSystem;
