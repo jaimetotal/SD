@@ -4,8 +4,6 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,12 +15,8 @@ import java.util.List;
 public class ConnectionManager {
 
 
-
     //http://stackoverflow.com/questions/2821658/java-sockets-multiple-client-threads-on-same-port-on-same-machine
 
-    private List<Integer> portPool;
-
-    public static final String QUERY_PORT = "QUERY_PORT";
     public static final String QUERY_FILES = "QUERY_FILES";
     public static final String QUERY_FILES_ACK = "QUERY_FILES_ACK";
     public static final String DOWNLOAD_FILE = "DOWNLOAD_FILE";
@@ -32,27 +26,22 @@ public class ConnectionManager {
     public static String MULTICAST_ADDRESS = "230.0.0.1";
     public static int MULTICAST_PORT = 4456;
 
-    public ConnectionManager()
-    {
-        portPool = new ArrayList<Integer>();
-        String port = System.getProperty("port.listen");
+    public ConnectionManager() {
+        //TODO Fetch properties
     }
-
 
 
     public Socket getTCPSocketToPeer(Peer node) {
         try {
             //TODO Query port for stream
-            Socket socket = new Socket(node.getAddress().toString(), ConnectionManager.SERVER_TCP_PORT);
-            return socket;
+            return new Socket(node.getAddress().toString(), ConnectionManager.SERVER_TCP_PORT);
         } catch (IOException e) {
 
         }
         return null;
     }
 
-    public DatagramSocket getUDPSocket()
-    {
+    public DatagramSocket getUDPSocket() {
         //TODO Receive socket from the ConnectionManager
         DatagramSocket responseSocket = null;
         try {
@@ -66,12 +55,11 @@ public class ConnectionManager {
         return responseSocket;
     }
 
-    public void sendMulticast(String message)
-    {
+    public void sendMulticast(String message) {
         InetAddress group = null;
         try {
             byte[] buf = message.getBytes();
-            DatagramSocket socket = new DatagramSocket(ConnectionManager.CLIENT_UDP_PORT);;
+            DatagramSocket socket = new DatagramSocket(ConnectionManager.CLIENT_UDP_PORT);
             group = InetAddress.getByName(ConnectionManager.MULTICAST_ADDRESS);
             DatagramPacket packet = new DatagramPacket(buf, buf.length, group, ConnectionManager.MULTICAST_PORT);
             socket.send(packet);
@@ -88,22 +76,20 @@ public class ConnectionManager {
 
     }
 
-    public ByteArrayInputStream getInputStream(Peer node, String command)
-    {
+    public ByteArrayInputStream getInputStream(Peer node, String command) {
         return new ByteArrayInputStream(getOutputStream(node, command).toByteArray());
     }
 
-    public ByteArrayOutputStream getOutputStream(Peer node, String command)
-    {
+    public ByteArrayOutputStream getOutputStream(Peer node, String command) {
 
         InputStream in;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try(Socket socket = getTCPSocketToPeer(node)) {
+        try (Socket socket = getTCPSocketToPeer(node)) {
             //Sends command
             PrintWriter streamWriter = new PrintWriter(socket.getOutputStream(), true);
             streamWriter.println(command);
             //Receives content
-            in = getTCPSocketToPeer(node).getInputStream();
+            in = socket.getInputStream();
             IOUtils.copy(in, out);
             socket.close();
             out.close();
@@ -114,9 +100,11 @@ public class ConnectionManager {
         return out;
     }
 
-
-    public void sendACK(Peer node)
-    {
-
+    public MulticastSocket getMulticastListenerSocket() throws IOException {
+        MulticastSocket socket = new MulticastSocket(ConnectionManager.MULTICAST_PORT);
+        InetAddress address = InetAddress.getByName(ConnectionManager.MULTICAST_ADDRESS);
+        socket.joinGroup(address);
+        return socket;
     }
+
 }

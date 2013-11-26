@@ -5,7 +5,10 @@ import tp_continua.Peer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.MulticastSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -58,21 +61,16 @@ public class ServerConnectionManager extends ConnectionManager {
         @Override
         public void run() {
             while (!shutdown) {
-                try {
-                    MulticastSocket socket;
-                    //TODO Create socket port argument
-                    socket = new MulticastSocket(4446);
-                    //TODO Create multicast argument
-                    InetAddress address = InetAddress.getByName("230.0.0.1");
-                    socket.joinGroup(address);
-
+                try (MulticastSocket socket = getMulticastListenerSocket()) {
                     //TODO Test what happens incoming when passes 256 bytes
                     byte[] buf = new byte[256];
                     DatagramPacket packet = new DatagramPacket(buf, buf.length);
+                    //waits for input
                     socket.receive(packet);
+                    //parses input
                     String received = new String(packet.getData(), 0, packet.getLength());
+                    //fires incoming transmission event
                     Peer client = new Peer(packet.getAddress(), packet.getPort());
-
                     IncomingUDPTransmissionEvent event = new IncomingUDPTransmissionEvent(client, received);
                     server.incomingUDPTransmission(event);
                 } catch (IOException e) {
@@ -84,8 +82,7 @@ public class ServerConnectionManager extends ConnectionManager {
         }
     }
 
-    public void shutDown()
-    {
+    public void shutDown() {
         this.shutdown = true;
     }
 }
