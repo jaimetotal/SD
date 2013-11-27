@@ -1,7 +1,7 @@
 package tp_continua.client;
 
-import tp_continua.File;
 import tp_continua.FileSystem;
+import tp_continua.PeerFile;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +25,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
     private List<QueryCompletedEvent.QueryCompletedEventListener> queryCompletedEventListener;
     private List<QueryFailedEvent.QueryFailedEventListener> queryFailedEventListeners;
     private BlockingQueue<Runnable> threadQueue;
-    private ConcurrentHashMap<File, Future<?>> filesDownloading;
+    private ConcurrentHashMap<PeerFile, Future<?>> filesDownloading;
 
 
     public Client(FileSystem fileSystem) {
@@ -38,7 +38,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
         this.downloadFailedEventListeners = new ArrayList<DownloadFailedEvent.DownloadFailedEventListener>();
         this.queryCompletedEventListener = new ArrayList<QueryCompletedEvent.QueryCompletedEventListener>();
         this.queryFailedEventListeners = new ArrayList<QueryFailedEvent.QueryFailedEventListener>();
-        this.filesDownloading = new ConcurrentHashMap<File, Future<?>>();
+        this.filesDownloading = new ConcurrentHashMap<PeerFile, Future<?>>();
     }
 
     public void queryNetwork() {
@@ -52,22 +52,22 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
         }
     }
 
-    public void getFile(File file) throws FileAlreadyDownloadingException {
-        if (filesDownloading.containsKey(file)) {
-            throw new FileAlreadyDownloadingException(file);
+    public void getFile(PeerFile peerFile) throws FileAlreadyDownloadingException {
+        if (filesDownloading.containsKey(peerFile)) {
+            throw new FileAlreadyDownloadingException(peerFile);
         }
-        Future<?> future = executorService.submit(new Download(connectionManager, file, this));
-        filesDownloading.put(file, future);
+        Future<?> future = executorService.submit(new Download(connectionManager, peerFile, this));
+        filesDownloading.put(peerFile, future);
     }
 
-    public void cancelFile(File file) {
-        if (filesDownloading.containsKey(file)) {
-            filesDownloading.get(file).cancel(true);
-            filesDownloading.remove(file);
+    public void cancelFile(PeerFile peerFile) {
+        if (filesDownloading.containsKey(peerFile)) {
+            filesDownloading.get(peerFile).cancel(true);
+            filesDownloading.remove(peerFile);
         }
     }
 
-    public Collection<File> listFiles() {
+    public Collection<PeerFile> listFiles() {
         return fileSystem.listFiles();
     }
 

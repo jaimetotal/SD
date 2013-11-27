@@ -1,7 +1,7 @@
 package tp_continua.client;
 
 import tp_continua.ConnectionManager;
-import tp_continua.File;
+import tp_continua.PeerFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -15,25 +15,25 @@ import java.io.IOException;
  */
 public class Download implements Runnable {
 
-    private File file;
+    private PeerFile peerFile;
     private Client client;
     private ClientConnectionManager connectionManager;
 
-    public Download(ClientConnectionManager connectionManager, File file, Client client) {
+    public Download(ClientConnectionManager connectionManager, PeerFile peerFile, Client client) {
         this.client = client;
-        this.file = file;
+        this.peerFile = peerFile;
         this.connectionManager = connectionManager;
     }
 
     @Override
     public void run() {
-        String command = String.format("%s\n%s", ConnectionManager.DOWNLOAD_FILE, file.getFileName());
-        try (ByteArrayOutputStream stream = connectionManager.getOutputStream(file.getNode(), command)) {
+        String command = String.format("%s\n%s", ConnectionManager.DOWNLOAD_FILE, peerFile.getFileName());
+        try (ByteArrayOutputStream stream = connectionManager.getOutputStream(peerFile.getNode(), command)) {
             if (stream.size() > 0) {
-                file.setContents(stream.toByteArray());
-                client.downloadCompleted(new DownloadCompletedEvent(file));
+                peerFile.setContents(stream.toByteArray());
+                client.downloadCompleted(new DownloadCompletedEvent(peerFile));
             } else {
-                client.downloadFailed(new DownloadFailedEvent(file));
+                client.downloadFailed(new DownloadFailedEvent(peerFile));
             }
 
         } catch (IOException e) {

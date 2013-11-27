@@ -19,25 +19,24 @@ public class QueryCompletedEvent extends EventObject {
      *
      * @param source The object on which the Event initially occurred.
      * @throws IllegalArgumentException
-     *          if source is null.
+     * if source is null.
      */
 
     private Index index;
 
 
-    public QueryCompletedEvent(Index index, Peer source ) {
+    public QueryCompletedEvent(Index index, Peer source) {
         super(source);
-        this.index= index;
+        this.index = index;
     }
 
     @Override
     public Peer getSource() {
-        return (Peer) super.getSource();    //To change body of overridden methods use File | Settings | File Templates.
+        return (Peer) super.getSource();    //To change body of overridden methods use PeerFile | Settings | PeerFile Templates.
     }
 
 
-    public Index getIndex()
-    {
+    public Index getIndex() {
         return index;
     }
 

@@ -17,8 +17,7 @@ public class QueryFailedEvent extends EventObject {
      * Constructs a prototypical Event.
      *
      * @param source The object on which the Event initially occurred.
-     * @throws IllegalArgumentException
-     *          if source is null.
+     * @throws IllegalArgumentException if source is null.
      */
     public QueryFailedEvent(Peer source) {
         super(source);
@@ -27,7 +26,7 @@ public class QueryFailedEvent extends EventObject {
 
     @Override
     public Peer getSource() {
-        return (Peer) super.getSource();    //To change body of overridden methods use File | Settings | File Templates.
+        return (Peer) super.getSource();    //To change body of overridden methods use PeerFile | Settings | PeerFile Templates.
     }
 
     public interface QueryFailedEventListener extends EventListener {

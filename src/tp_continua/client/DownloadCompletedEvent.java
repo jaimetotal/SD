@@ -1,6 +1,6 @@
 package tp_continua.client;
 
-import tp_continua.File;
+import tp_continua.PeerFile;
 
 import java.util.EventListener;
 import java.util.EventObject;
@@ -17,19 +17,18 @@ public class DownloadCompletedEvent extends EventObject {
      * Constructs a prototypical Event.
      *
      * @param source The object on which the Event initially occurred.
-     * @throws IllegalArgumentException
-     *          if source is null.
+     * @throws IllegalArgumentException if source is null.
      */
-    public DownloadCompletedEvent(File source) {
+    public DownloadCompletedEvent(PeerFile source) {
         super(source);
     }
 
     @Override
-    public File getSource() {
-        return (File) super.getSource();
+    public PeerFile getSource() {
+        return (PeerFile) super.getSource();
     }
 
-    public interface DownloadCompletedEventListener extends EventListener{
+    public interface DownloadCompletedEventListener extends EventListener {
         void downloadCompleted(DownloadCompletedEvent e);
     }
 }

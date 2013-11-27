@@ -9,14 +9,19 @@ import java.util.Arrays;
  * Time: 21:07
  * Student Number: 8090309
  */
-public class File {
+public class PeerFile {
 
     private String fileName;
     private byte[] contents;
     private Peer node;
     private boolean isLocal;
 
-    public File(String fileName, byte[] contents, Peer node) {
+    public PeerFile(String fileName) {
+        this.fileName = fileName;
+        this.isLocal = true;
+    }
+
+    public PeerFile(String fileName, byte[] contents, Peer node) {
         this.fileName = fileName;
         this.contents = contents;
         this.node = node;
@@ -46,19 +51,18 @@ public class File {
         isLocal = local;
     }
 
-    public boolean isPreview()
-    {
+    public boolean isPreview() {
         return contents == null;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof File)) return false;
+        if (!(o instanceof PeerFile)) return false;
 
-        File file1 = (File) o;
+        PeerFile peerFile1 = (PeerFile) o;
 
-        if (!fileName.equals(file1.fileName)) return false;
+        if (!fileName.equals(peerFile1.fileName)) return false;
 
         return true;
     }

@@ -15,13 +15,11 @@ public class Index implements Serializable {
 
     private List<String> filesName;
 
-    public Index(List<File> files) {
+    public Index(List<PeerFile> peerFiles) {
         filesName = new ArrayList<String>();
-        for (File file : files)
-        {
-            if(file.isLocal())
-            {
-                this.filesName.add(file.getFileName());
+        for (PeerFile peerFile : peerFiles) {
+            if (peerFile.isLocal()) {
+                this.filesName.add(peerFile.getFileName());
             }
         }
     }

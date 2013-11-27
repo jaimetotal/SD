@@ -11,7 +11,7 @@ import java.net.Socket;
  * User: AntónioJaime
  * Date: 24-09-2013
  * Time: 20:48
- * To change this template use File | Settings | File Templates.
+ * To change this template use PeerFile | Settings | PeerFile Templates.
  */
 public class Client {
 
@@ -23,8 +23,8 @@ public class Client {
     public void connect(String machineName) throws IOException {
         echoSocket = new Socket(machineName, 7000);
         out = new PrintWriter(echoSocket.getOutputStream(), true);
-        in = new BufferedReader( new InputStreamReader(echoSocket.getInputStream()));
-        stdIn =  new BufferedReader( new InputStreamReader(System.in));
+        in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+        stdIn = new BufferedReader(new InputStreamReader(System.in));
     }
 
     public void connect() throws IOException {
@@ -36,8 +36,7 @@ public class Client {
         while ((userInput = stdIn.readLine()) != null && !userInput.equals("exit")) {
             out.println(userInput);
             System.out.println("response from server: " + in.readLine());
-            if(userInput.equals("exit"))
-            {
+            if (userInput.equals("exit")) {
                 break;
             }
         }

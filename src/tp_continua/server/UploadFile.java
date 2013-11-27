@@ -1,7 +1,7 @@
 package tp_continua.server;
 
-import tp_continua.File;
 import tp_continua.FileSystem;
+import tp_continua.PeerFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.net.Socket;
  * Time: 22:00
  * Student Number: 8090309
  */
-public class UploadFile implements  Runnable {
+public class UploadFile implements Runnable {
 
     private Socket socket;
     private FileSystem fileSystem;
@@ -30,9 +30,9 @@ public class UploadFile implements  Runnable {
         try {
             BufferedReader stdIn = new BufferedReader(new BufferedReader(null));
             String fileName = stdIn.readLine();
-            File file = fileSystem.getFileByName(fileName);
+            PeerFile peerFile = fileSystem.getFileByName(fileName);
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-            outputStream.write(file.getContents());
+            outputStream.write(peerFile.getContents());
             outputStream.close();
             socket.close();
             stdIn.close();

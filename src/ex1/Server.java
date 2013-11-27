@@ -12,7 +12,7 @@ import java.net.Socket;
  * User: AntónioJaime
  * Date: 24-09-2013
  * Time: 20:48
- * To change this template use File | Settings | File Templates.
+ * To change this template use PeerFile | Settings | PeerFile Templates.
  */
 public class Server {
 
@@ -33,15 +33,14 @@ public class Server {
         }
 
 
-
         String userInput;
 
         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-        String prefix = serverSocket.getLocalSocketAddress()+":" + clientSocket.getLocalAddress() + ":";
+        String prefix = serverSocket.getLocalSocketAddress() + ":" + clientSocket.getLocalAddress() + ":";
 
-        while ((userInput = in.readLine() ) != null && !userInput.equals("exit")) {
+        while ((userInput = in.readLine()) != null && !userInput.equals("exit")) {
             System.out.println("Input received: " + userInput);
             out.println(prefix + userInput);
         }

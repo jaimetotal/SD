@@ -1,6 +1,6 @@
 package tp_continua.client;
 
-import tp_continua.File;
+import tp_continua.PeerFile;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +11,7 @@ import tp_continua.File;
  */
 public class FileAlreadyDownloadingException extends Throwable {
 
-    public FileAlreadyDownloadingException(File file) {
-        super(String.format("File %s is already being downloaded.", file.getFileName()));
+    public FileAlreadyDownloadingException(PeerFile peerFile) {
+        super(String.format("PeerFile %s is already being downloaded.", peerFile.getFileName()));
     }
 }
