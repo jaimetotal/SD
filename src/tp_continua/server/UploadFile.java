@@ -9,11 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 19-11-2013
- * Time: 22:00
- * Student Number: 8090309
+ *
  */
 public class UploadFile implements Runnable {
 

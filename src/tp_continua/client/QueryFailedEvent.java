@@ -6,18 +6,14 @@ import java.util.EventListener;
 import java.util.EventObject;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 17-11-2013
- * Time: 23:38
- * Student Number: 8090309
+ * Event for when a query process or a index parsing has failed
  */
 public class QueryFailedEvent extends EventObject {
+
     /**
-     * Constructs a prototypical Event.
+     * Peer which failed to receive index, null if the query process has failed instead
      *
-     * @param source The object on which the Event initially occurred.
-     * @throws IllegalArgumentException if source is null.
+     * @param source
      */
     public QueryFailedEvent(Peer source) {
         super(source);
@@ -26,7 +22,7 @@ public class QueryFailedEvent extends EventObject {
 
     @Override
     public Peer getSource() {
-        return (Peer) super.getSource();    //To change body of overridden methods use PeerFile | Settings | PeerFile Templates.
+        return (Peer) super.getSource();
     }
 
     public interface QueryFailedEventListener extends EventListener {

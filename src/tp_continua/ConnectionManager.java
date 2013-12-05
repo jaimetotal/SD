@@ -14,9 +14,6 @@ import java.net.*;
  */
 public class ConnectionManager {
 
-
-    //http://stackoverflow.com/questions/2821658/java-sockets-multiple-client-threads-on-same-port-on-same-machine
-
     public static final String QUERY_FILES = "QUERY_FILES";
     public static final String QUERY_FILES_ACK = "QUERY_FILES_ACK";
     public static final String DOWNLOAD_FILE = "DOWNLOAD_FILE";
@@ -80,14 +77,14 @@ public class ConnectionManager {
         return new ByteArrayInputStream(getOutputStream(node, command).toByteArray());
     }
 
-    public ByteArrayOutputStream getOutputStream(Peer node, String command) {
+    public ByteArrayOutputStream getOutputStream(Peer node, String token) {
 
         InputStream in;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (Socket socket = getTCPSocketToPeer(node)) {
-            //Sends command
+            //Sends token
             PrintWriter streamWriter = new PrintWriter(socket.getOutputStream(), true);
-            streamWriter.println(command);
+            streamWriter.println(token);
             //Receives content
             in = socket.getInputStream();
             IOUtils.copy(in, out);

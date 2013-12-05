@@ -12,26 +12,33 @@ import java.net.DatagramSocket;
 import java.util.Scanner;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 18-11-2013
- * Time: 0:05
- * Student Number: 8090309
+ * Task for querying files in network
  */
 public class QueryFiles implements Runnable {
 
     private ClientConnectionManager connectionManager;
     private Client client;
 
+    /**
+     * Constructor for QueryFiles
+     *
+     * @param connectionManager Connection manager to obtain connections to server
+     * @param client            Client associated to fire events
+     */
     public QueryFiles(ClientConnectionManager connectionManager, Client client) {
         this.connectionManager = connectionManager;
         this.client = client;
     }
 
+    /**
+     * Starts UDP connection by sending to multicast network a QUERY_FILES TOKEN, receiving then from each available peer
+     * an QUERY_FILES_ACK token until reaches the connection timeout. For each peer, a new runnable is executed to parse the peer's available files.
+     * In case the network query has failed or the parsing of a peer's files fails, a query failed event is fired.
+     * For each successful peer's files parsing, a query completed event is fired.
+     */
     @Override
     public void run() {
         try {
-            //TODO check nulls
             DatagramSocket responseSocket = connectionManager.getUDPSocket();
             connectionManager.sendMulticast(ConnectionManager.QUERY_FILES);
             //Receives ConnectionManager.QUERY_FILES_ACK + PORT SIZE + \n
@@ -52,13 +59,14 @@ public class QueryFiles implements Runnable {
                 }
             }
         } catch (Exception e) {
-            //TODO revise null argument
             client.queryFailed(new QueryFailedEvent(null));
         }
     }
 
 
-    //TODO check need for this
+    /**
+     * Small runnable to parse Peer's files
+     */
     private class FetchQuery implements Runnable {
         private Peer node;
 
@@ -66,21 +74,19 @@ public class QueryFiles implements Runnable {
             this.node = node;
         }
 
+        /**
+         * Starts streaming the contents from the TCP connection to generate an index.
+         */
         @Override
         public void run() {
-            //TODO CREATE GENERIC METHOD FOR THIS
-            //TODO Get Socket
             try (ByteArrayInputStream stream = connectionManager.getInputStream(node, ConnectionManager.QUERY_FILES)) {
                 ObjectInputStream objectInputStream = new ObjectInputStream(stream);
                 Index index = (Index) objectInputStream.readObject();
                 client.queryCompleted(new QueryCompletedEvent(index, node));
-                //TODO catch close
                 objectInputStream.close();
             } catch (IOException e) {
-                //TODO Treat error as network issue?
                 client.queryFailed(new QueryFailedEvent(node));
             } catch (ClassNotFoundException e) {
-                //TODO Treat error as invalid data?
                 client.queryFailed(new QueryFailedEvent(node));
             }
         }

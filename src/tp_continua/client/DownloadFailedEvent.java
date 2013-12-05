@@ -13,19 +13,26 @@ import java.util.EventObject;
  * Student Number: 8090309
  */
 public class DownloadFailedEvent extends EventObject {
+    private final String message;
+
     /**
      * Constructs a prototypical Event.
      *
      * @param source The object on which the Event initially occurred.
      * @throws IllegalArgumentException if source is null.
      */
-    public DownloadFailedEvent(PeerFile source) {
+    public DownloadFailedEvent(PeerFile source, String message) {
         super(source);
+        this.message = message;
     }
 
     @Override
     public PeerFile getSource() {
         return (PeerFile) super.getSource();
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public interface DownloadFailedEventListener extends EventListener {

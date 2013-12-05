@@ -1,5 +1,10 @@
 package tp_continua;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 /**
@@ -21,9 +26,8 @@ public class PeerFile {
         this.isLocal = true;
     }
 
-    public PeerFile(String fileName, byte[] contents, Peer node) {
+    public PeerFile(String fileName, Peer node) {
         this.fileName = fileName;
-        this.contents = contents;
         this.node = node;
     }
 
@@ -31,12 +35,25 @@ public class PeerFile {
         return fileName;
     }
 
-    public byte[] getContents() {
+    public synchronized byte[] getContents() throws IOException {
+        if (isLocal) {
+            return Files.readAllBytes(Paths.get(fileName));
+        }
         return contents;
     }
 
-    public void setContents(byte[] contents) {
+    public synchronized void setContents(byte[] contents) {
         this.contents = contents;
+    }
+
+    public synchronized void writeToDisk(String path) throws IOException {
+        if (contents == null || isLocal) return;
+        Path destination = Paths.get(path, fileName);
+        ByteArrayInputStream in = new ByteArrayInputStream(contents);
+        Files.copy(in, destination);
+        contents = null;
+        isLocal = true;
+        node = null;
     }
 
     public Peer getNode() {
@@ -45,14 +62,6 @@ public class PeerFile {
 
     public boolean isLocal() {
         return isLocal;
-    }
-
-    public void setLocal(boolean local) {
-        isLocal = local;
-    }
-
-    public boolean isPreview() {
-        return contents == null;
     }
 
     @Override
@@ -74,5 +83,9 @@ public class PeerFile {
         result = 31 * result + node.hashCode();
         result = 31 * result + (isLocal ? 1 : 0);
         return result;
+    }
+
+    public boolean isPreview() {
+        return contents == null;
     }
 }

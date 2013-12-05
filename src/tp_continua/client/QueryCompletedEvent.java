@@ -7,24 +7,16 @@ import java.util.EventListener;
 import java.util.EventObject;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 17-11-2013
- * Time: 23:38
- * Student Number: 8090309
+ * Event for when a query from a peer is successfully received
  */
 public class QueryCompletedEvent extends EventObject {
-    /**
-     * Constructs a prototypical Event.
-     *
-     * @param source The object on which the Event initially occurred.
-     * @throws IllegalArgumentException
-     * if source is null.
-     */
 
     private Index index;
 
-
+    /**
+     * @param index  Collection of files received
+     * @param source Peer which reported index
+     */
     public QueryCompletedEvent(Index index, Peer source) {
         super(source);
         this.index = index;

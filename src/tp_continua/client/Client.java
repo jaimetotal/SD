@@ -3,17 +3,13 @@ package tp_continua.client;
 import tp_continua.FileSystem;
 import tp_continua.PeerFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 12-11-2013
- * Time: 21:07
- * Student Number: 8090309
+ * Client responsible for querying files available in network and downloading them
  */
 public class Client extends Thread implements DownloadCompletedEvent.DownloadCompletedEventListener, DownloadFailedEvent.DownloadFailedEventListener, DownloadManagerDispatcher, QueryDispatcher, QueryFailedEvent.QueryFailedEventListener, QueryCompletedEvent.QueryCompletedEventListener {
 
@@ -27,12 +23,19 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
     private BlockingQueue<Runnable> threadQueue;
     private ConcurrentHashMap<PeerFile, Future<?>> filesDownloading;
 
+    private static final short THREADQUEUE_MAXSIZE = 10;
+    private static final short THREADPOOL_MAXSIZE = 5;
+    private static final short MULTICAST_TIMEOUT = 10;
 
+    /**
+     * Construtor of Client
+     *
+     * @param fileSystem Filesystem used to save files and receive logical files location
+     */
     public Client(FileSystem fileSystem) {
-        //TODO review sizes
         this.connectionManager = new ClientConnectionManager();
-        threadQueue = new ArrayBlockingQueue<Runnable>(Integer.MAX_VALUE);
-        this.executorService = new ThreadPoolExecutor(5, 5, Long.MAX_VALUE, TimeUnit.DAYS, threadQueue);
+        threadQueue = new ArrayBlockingQueue<Runnable>(THREADQUEUE_MAXSIZE);
+        this.executorService = new ThreadPoolExecutor(THREADPOOL_MAXSIZE, THREADPOOL_MAXSIZE, Long.MAX_VALUE, TimeUnit.DAYS, threadQueue);
         this.fileSystem = fileSystem;
         this.downloadCompletedEventListener = new ArrayList<DownloadCompletedEvent.DownloadCompletedEventListener>();
         this.downloadFailedEventListeners = new ArrayList<DownloadFailedEvent.DownloadFailedEventListener>();
@@ -41,17 +44,28 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
         this.filesDownloading = new ConcurrentHashMap<PeerFile, Future<?>>();
     }
 
+    /**
+     * Sends a multicast to network to obtain index of available files to download from other peers
+     * until reaches the timeout
+     */
     public void queryNetwork() {
+        //Creates local executor due to awaiting termination for this Runnable only
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new QueryFiles(connectionManager, this));
-        //TODO Revise this due to being blocked
         try {
-            executor.awaitTermination(10, TimeUnit.SECONDS); // Timeout of 10 minutes.
+            executor.awaitTermination(MULTICAST_TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             executor.shutdown();
         }
     }
 
+    /**
+     * Downloads a given file from a remote node
+     *
+     * @param peerFile File to be download
+     * @throws FileAlreadyDownloadingException
+     *          Fired when this file is already being downloaded
+     */
     public void getFile(PeerFile peerFile) throws FileAlreadyDownloadingException {
         if (filesDownloading.containsKey(peerFile)) {
             throw new FileAlreadyDownloadingException(peerFile);
@@ -60,6 +74,11 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
         filesDownloading.put(peerFile, future);
     }
 
+    /**
+     * Cancels download process from the server
+     *
+     * @param peerFile File's download to be cancelled
+     */
     public void cancelFile(PeerFile peerFile) {
         if (filesDownloading.containsKey(peerFile)) {
             filesDownloading.get(peerFile).cancel(true);
@@ -67,19 +86,29 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
         }
     }
 
-    public Collection<PeerFile> listFiles() {
-        return fileSystem.listFiles();
-    }
-
+    /**
+     * Event listener for when a download is completed
+     *
+     * @param e Event which fire
+     */
     @Override
     public void downloadCompleted(DownloadCompletedEvent e) {
         filesDownloading.remove(e.getSource());
-        fileSystem.addFile(e.getSource());
+        try {
+            fileSystem.updateFile(e.getSource());
+        } catch (IOException ex) {
+            downloadFailed(new DownloadFailedEvent(e.getSource(), "Error saving file to disk."));
+        }
         for (DownloadCompletedEvent.DownloadCompletedEventListener listener : downloadCompletedEventListener) {
             listener.downloadCompleted(e);
         }
     }
 
+    /**
+     * Event listener for when a download fails to download
+     *
+     * @param e Event which fire
+     */
     @Override
     public void downloadFailed(DownloadFailedEvent e) {
         filesDownloading.remove(e.getSource());
@@ -88,6 +117,11 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
         }
     }
 
+    /**
+     * Event listener for when a new query has been received
+     *
+     * @param e Event which fire
+     */
     @Override
     public void queryCompleted(QueryCompletedEvent e) {
         fileSystem.addRemoteIndex(e.getSource(), e.getIndex());
@@ -96,6 +130,11 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
         }
     }
 
+    /**
+     * Event for when the network's query has failed or the download of a peer's index failed
+     *
+     * @param e Event which fire
+     */
     @Override
     public void queryFailed(QueryFailedEvent e) {
         for (QueryFailedEvent.QueryFailedEventListener listener : queryFailedEventListeners) {

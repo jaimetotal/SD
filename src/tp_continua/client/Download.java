@@ -7,11 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 12-11-2013
- * Time: 21:07
- * Student Number: 8090309
+ * Task for remote file downloading
  */
 public class Download implements Runnable {
 
@@ -19,26 +15,35 @@ public class Download implements Runnable {
     private Client client;
     private ClientConnectionManager connectionManager;
 
+    /**
+     * Constructor for Download
+     *
+     * @param connectionManager ConnectionManager to obtain connections
+     * @param peerFile          File to be download
+     * @param client            Associated client to fire download-related events
+     */
     public Download(ClientConnectionManager connectionManager, PeerFile peerFile, Client client) {
         this.client = client;
         this.peerFile = peerFile;
         this.connectionManager = connectionManager;
     }
 
+    /**
+     * Starts TCP connection by sending to server TOKEN + FILENAME, receiving then the byte stream,
+     * firing in the download completed/failed event
+     */
     @Override
     public void run() {
-        String command = String.format("%s\n%s", ConnectionManager.DOWNLOAD_FILE, peerFile.getFileName());
-        try (ByteArrayOutputStream stream = connectionManager.getOutputStream(peerFile.getNode(), command)) {
+        String token = String.format("%s\n%s", ConnectionManager.DOWNLOAD_FILE, peerFile.getFileName());
+        try (ByteArrayOutputStream stream = connectionManager.getOutputStream(peerFile.getNode(), token)) {
             if (stream.size() > 0) {
                 peerFile.setContents(stream.toByteArray());
                 client.downloadCompleted(new DownloadCompletedEvent(peerFile));
-            } else {
-                client.downloadFailed(new DownloadFailedEvent(peerFile));
+                return;
             }
-
         } catch (IOException e) {
-            e.printStackTrace();
-//TODO Treat exception
+            //Also fires failed event
         }
+        client.downloadFailed(new DownloadFailedEvent(peerFile, "Error from server while trying downloading file."));
     }
 }

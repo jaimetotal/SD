@@ -2,6 +2,7 @@ package tp_continua;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -15,17 +16,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class FileSystem {
 
     private CopyOnWriteArrayList<PeerFile> peerFiles;
-
-    public FileSystem() {
-        peerFiles = new CopyOnWriteArrayList<PeerFile>();
-    }
+    private String path;
 
     public FileSystem(String path) {
+        this.path = path;
         peerFiles = new CopyOnWriteArrayList<PeerFile>();
         File folder = new File(path);
         if (folder.isDirectory()) {
             for (File file : folder.listFiles()) {
-                //TODO get content
                 peerFiles.add(new PeerFile(file.getName()));
             }
         }
@@ -55,28 +53,33 @@ public class FileSystem {
         return new Index(peerFiles);
     }
 
+    /**
+     * Adds a remote index to the file system, to display them as available files to download
+     *
+     * @param source
+     * @param index
+     */
     public void addRemoteIndex(Peer source, Index index) {
         for (String fileName : index.getFilesName()) {
-            PeerFile peerFile = new PeerFile(fileName, null, source);
+            PeerFile peerFile = new PeerFile(fileName, source);
             if (this.peerFiles.contains(peerFile)) {
                 this.addFile(peerFile);
             }
         }
     }
 
-    //TODO check if required
-/*
-    public void updateFile(PeerFile remoteFile)
-    {
-        for (PeerFile localFile : peerFiles)
-        {
-            if(localFile.equals(remoteFile))
-            {
-                peerFiles.remove(localFile);
-                peerFiles.add(remoteFile);
-                return;
-            }
+    /**
+     * Adds file to filesystem if not added already and writes its contents to the disk, making it local
+     *
+     * @param source File to be saved
+     * @throws IOException Error reported by the system when trying to save the file
+     */
+    public void updateFile(PeerFile source) throws IOException {
+        if (!peerFiles.contains(source)) {
+            peerFiles.add(source);
         }
-        peerFiles.add(remoteFile);
-    }*/
+        if (!source.isLocal() && !source.isPreview()) {
+            source.writeToDisk(path);
+        }
+    }
 }

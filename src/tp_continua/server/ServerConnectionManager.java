@@ -12,11 +12,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 19-11-2013
- * Time: 0:21
- * Student Number: 8090309
+ * Server-side connection manager, with methods specific for this scenario
  */
 public class ServerConnectionManager extends ConnectionManager {
 
@@ -24,6 +20,13 @@ public class ServerConnectionManager extends ConnectionManager {
     private ExecutorService executorService;
     private Server server;
 
+
+    /**
+     * Opens sockets for incoming TCP and UDP based on ConnectionManager settings
+     *
+     * @param server          Server to fire events
+     * @param executorService Pool to add TCP/UDP transmission runnable
+     */
     public ServerConnectionManager(Server server, ExecutorService executorService) {
         this.server = server;
         this.executorService = executorService;
@@ -31,32 +34,38 @@ public class ServerConnectionManager extends ConnectionManager {
         this.executorService.submit(new IncomingUDP());
     }
 
+    /**
+     * Opens a TCP connection and for each incoming TCP, fires a event with the message received and the sender
+     */
     private class IncomingTCP implements Runnable {
         @Override
         public void run() {
             do {
-                try {
-                    ServerSocket socketServer = new ServerSocket(ConnectionManager.SERVER_TCP_PORT);
+                try (ServerSocket socketServer = new ServerSocket(ConnectionManager.SERVER_TCP_PORT)) {
+
                     //Waits for a client to connect and fires the event. The event will be responsible to close socket
                     Socket incomingSocket = socketServer.accept();
-                    Peer client = new Peer(incomingSocket.getInetAddress(), incomingSocket.getPort());
-                    //TODO Catch whatever
-                    BufferedReader stdIn = new BufferedReader(new BufferedReader(null));
-                    String message = stdIn.readLine();
-                    stdIn.close();
 
-                    IncomingTCPTransmissionEvent event = new IncomingTCPTransmissionEvent(client, message, incomingSocket);
-                    server.incomingTCPTransmission(event);
-                    //TODO Fires event if Message is supposed to be accepted?
+                    if (incomingSocket.getInetAddress().isAnyLocalAddress()) {
+                        Peer client = new Peer(incomingSocket.getInetAddress(), incomingSocket.getPort());
+                        BufferedReader stdIn = new BufferedReader(new BufferedReader(null));
+                        String message = stdIn.readLine();
+                        stdIn.close();
+                        IncomingTCPTransmissionEvent event = new IncomingTCPTransmissionEvent(client, message, incomingSocket);
+                        server.incomingTCPTransmission(event);
+                    } else {
+                        incomingSocket.close();
+                    }
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    //TODO Treat exception
+                    //TODO maybe fire event?
                 }
             } while (!shutdown);
-            //TODO Close socket
         }
     }
 
+    /**
+     * Opens a UDP connection and for each incoming UDP, fires a event with the message received and the sender
+     */
     private class IncomingUDP implements Runnable {
         @Override
         public void run() {
@@ -74,9 +83,8 @@ public class ServerConnectionManager extends ConnectionManager {
                     IncomingUDPTransmissionEvent event = new IncomingUDPTransmissionEvent(client, received);
                     server.incomingUDPTransmission(event);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //TODO maybe fire connection shutdown event?
                 } finally {
-                    //TODO Close sockets & alike
                 }
             }
         }

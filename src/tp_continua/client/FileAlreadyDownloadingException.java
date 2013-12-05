@@ -3,11 +3,7 @@ package tp_continua.client;
 import tp_continua.PeerFile;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 18-11-2013
- * Time: 21:48
- * Student Number: 8090309
+ * Exception to report when a file's download is already in progress and another of the same was requested
  */
 public class FileAlreadyDownloadingException extends Throwable {
 

@@ -11,11 +11,11 @@ import java.net.InetAddress;
  */
 public class Peer {
 
-    private InetAddress address;
+    private String address;
     private int port;
 
     public Peer(InetAddress address, int port) {
-        this.address = address;
+        this.address = address.getHostName();
         this.port = port;
     }
 
@@ -24,7 +24,7 @@ public class Peer {
         return port;
     }
 
-    public InetAddress getAddress() {
+    public String getAddress() {
         return address;
     }
 

@@ -7,33 +7,39 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 17-11-2013
- * Time: 23:25
- * Student Number: 8090309
+ * Task to list available files to remote client
  */
 public class ListFiles implements Runnable {
 
     private Socket socket;
     private Index index;
 
+    /**
+     * Constructor for ListFiles
+     *
+     * @param socket Open socket for communication
+     * @param index  Index of files available for download
+     */
     public ListFiles(Socket socket, Index index) {
         this.socket = socket;
         this.index = index;
     }
 
+    /**
+     * Serializes the index of available files to the open socket
+     */
     @Override
     public void run() {
-        try
-        {
+        try {
             ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
             objectOutput.writeObject(index);
-        }
-        catch (IOException e)
-        {
-            //TODO Log
-            e.printStackTrace();
+        } catch (IOException e) {
+            //In this case, the connection will fail and the client won't receive the list
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException e) {
+            }
         }
     }
 }

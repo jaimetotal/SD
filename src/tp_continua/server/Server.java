@@ -18,10 +18,11 @@ public class Server extends Thread implements IncomingTCPTransmissionEvent.Incom
     private ServerConnectionManager connectionManager;
     private FileSystem fileSystem;
     private BlockingQueue<Runnable> threadQueue;
+    private static final short THREADQUEUE_MAXSIZE = 10;
 
     public Server(FileSystem fileSystem) {
         //TODO review sizes
-        threadQueue = new ArrayBlockingQueue<Runnable>(Integer.MAX_VALUE);
+        threadQueue = new ArrayBlockingQueue<Runnable>(THREADQUEUE_MAXSIZE);
         this.executorService = new ThreadPoolExecutor(5, 5, Long.MAX_VALUE, TimeUnit.DAYS, threadQueue);
         this.fileSystem = fileSystem;
         connectionManager = new ServerConnectionManager(this, executorService);
@@ -41,7 +42,7 @@ public class Server extends Thread implements IncomingTCPTransmissionEvent.Incom
     @Override
     public void incomingUDPTransmission(IncomingUDPTransmissionEvent event) {
         if (event.getMessage().equals(ConnectionManager.QUERY_FILES)) {
-          executorService.submit(new Acknowledge(connectionManager, event.getSource()));
+            executorService.submit(new Acknowledge(connectionManager, event.getSource()));
         } else {
             //TODO report error?
         }

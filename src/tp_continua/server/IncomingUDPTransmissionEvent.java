@@ -5,14 +5,14 @@ import tp_continua.Peer;
 import java.util.EventListener;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 19-11-2013
- * Time: 21:30
- * Student Number: 8090309
+ * Event for when a UDP transmission has been received
  */
 public class IncomingUDPTransmissionEvent extends IncomingTransmissionEvent {
 
+    /**
+     * @param source  Peer which open connection
+     * @param message Token received within the message
+     */
     public IncomingUDPTransmissionEvent(Peer source, String message) {
         super(source, message, Protocol.UDP);
     }

@@ -6,18 +6,12 @@ import java.util.EventListener;
 import java.util.EventObject;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 12-11-2013
- * Time: 21:54
- * Student Number: 8090309
+ * Event to notify when download is completed
  */
 public class DownloadCompletedEvent extends EventObject {
+
     /**
-     * Constructs a prototypical Event.
-     *
-     * @param source The object on which the Event initially occurred.
-     * @throws IllegalArgumentException if source is null.
+     * @param source File which has been completed
      */
     public DownloadCompletedEvent(PeerFile source) {
         super(source);
@@ -28,6 +22,9 @@ public class DownloadCompletedEvent extends EventObject {
         return (PeerFile) super.getSource();
     }
 
+    /**
+     * Listener to be notified when a download is completed
+     */
     public interface DownloadCompletedEventListener extends EventListener {
         void downloadCompleted(DownloadCompletedEvent e);
     }
