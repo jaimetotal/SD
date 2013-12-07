@@ -75,7 +75,6 @@ public class ServerConnectionManager extends ConnectionManager {
                     server.incomingTCPTransmission(event);
                 } catch (IOException e) {
                     logger.error(e, "Error while waiting for incoming TCP.");
-                    //TODO maybe fire event?
                 }
             } while (!shutdown);
             try {

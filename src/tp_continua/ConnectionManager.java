@@ -2,7 +2,10 @@ package tp_continua;
 
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.*;
 
 public class ConnectionManager {
@@ -24,8 +27,9 @@ public class ConnectionManager {
 
     public static Socket getTCPSocketToPeer(Peer node) {
         try {
-            logger.info("Opening socket for %s:%d", node.getAddress().toString(), ConnectionManager.SERVER_TCP_PORT);
-            return new Socket(node.getAddress().toString(), ConnectionManager.SERVER_TCP_PORT);
+            int port = node.getPort() == 0 ? ConnectionManager.SERVER_TCP_PORT : node.getPort();
+            logger.info("Opening socket for %s:%d", node, port);
+            return new Socket(node.getAddress().toString(), port);
         } catch (IOException e) {
             logger.error(e, "Error while trying to open TCP Socket.");
         }
@@ -57,18 +61,11 @@ public class ConnectionManager {
             group = InetAddress.getByName(ConnectionManager.MULTICAST_ADDRESS);
             DatagramPacket packet = new DatagramPacket(buf, buf.length, group, ConnectionManager.MULTICAST_PORT);
             socket.send(packet);
-        } catch (UnknownHostException e) {
-            logger.error(e, "Trying to send multicast message.");
-        } catch (SocketException e) {
-            logger.error(e, "Trying to send multicast message.");
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error(e, "Trying to send multicast message.");
         }
     }
 
-    public ByteArrayInputStream getInputStream(Peer node, String command) {
-        return new ByteArrayInputStream(getOutputStream(node, command).toByteArray());
-    }
 
     public static void uploadContent(InputStream inputStream, Socket socket) throws IOException {
         OutputStream out = socket.getOutputStream();
@@ -97,29 +94,6 @@ public class ConnectionManager {
         } catch (IOException e) {
             logger.error(e, "Error while trying to obtain output stream from socket.");
         }
-    }
-
-    public static ByteArrayOutputStream getOutputStream(Peer node, String token) {
-
-        InputStream in;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try (Socket socket = getTCPSocketToPeer(node)) {
-            //Sends token
-            logger.info("Sending message to target %s:", token);
-            PrintWriter streamWriter = new PrintWriter(socket.getOutputStream(), true);
-            streamWriter.println(token);
-            logger.info("Now waiting for input.");
-            //Receives content
-            in = socket.getInputStream();
-            IOUtils.copy(in, out);
-            logger.info("Input received.");
-            socket.close();
-            out.close();
-            in.close();
-        } catch (IOException e) {
-            logger.error(e, "Error while trying to obtain output stream from socket.");
-        }
-        return out;
     }
 
     public static MulticastSocket getMulticastListenerSocket() throws IOException {

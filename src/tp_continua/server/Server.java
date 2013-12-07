@@ -53,7 +53,7 @@ public class Server extends Thread implements IncomingTCPTransmissionEvent.Incom
         if (event.getMessage().equals(ConnectionManager.QUERY_FILES)) {
             executorService.submit(new Acknowledge(connectionManager, event.getSource()));
         } else {
-            //TODO report error?
+            logger.warn("UDP Message %s ignored.", event.getMessage());
         }
     }
 }

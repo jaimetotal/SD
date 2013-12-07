@@ -6,6 +6,7 @@ import tp_continua.PeerFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -15,7 +16,6 @@ import java.util.concurrent.*;
 public class Client extends Thread implements DownloadCompletedEvent.DownloadCompletedEventListener, DownloadFailedEvent.DownloadFailedEventListener, DownloadManagerDispatcher, QueryDispatcher, QueryFailedEvent.QueryFailedEventListener, QueryCompletedEvent.QueryCompletedEventListener {
 
     private ExecutorService executorService;
-    private ClientConnectionManager connectionManager;
     private FileSystem fileSystem;
     private List<DownloadCompletedEvent.DownloadCompletedEventListener> downloadCompletedEventListener;
     private List<DownloadFailedEvent.DownloadFailedEventListener> downloadFailedEventListeners;
@@ -36,7 +36,6 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      */
     public Client(FileSystem fileSystem) {
         logger = InternalLogger.getLogger(this.getClass());
-        this.connectionManager = new ClientConnectionManager();
         threadQueue = new ArrayBlockingQueue<Runnable>(THREADQUEUE_MAXSIZE);
         this.executorService = new ThreadPoolExecutor(THREADPOOL_MAXSIZE, THREADPOOL_MAXSIZE, Long.MAX_VALUE, TimeUnit.DAYS, threadQueue);
         this.fileSystem = fileSystem;
@@ -55,7 +54,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
         logger.info("Echoing through the network with a timeout of %d seconds.", MULTICAST_TIMEOUT);
         //Creates local executor due to awaiting termination for this Runnable only
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(new QueryFiles(connectionManager, this));
+        executor.execute(new QueryFiles(this));
         try {
             executor.awaitTermination(MULTICAST_TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -196,6 +195,10 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
     @Override
     public void removeQueryFailedEventListener(QueryFailedEvent.QueryFailedEventListener listener) {
         this.queryFailedEventListeners.remove(listener);
+    }
+
+    public Enumeration<PeerFile> getDownloadingFiles() {
+        return filesDownloading.keys();
     }
 
 }

@@ -19,7 +19,6 @@ public class Peer {
         this.port = port;
     }
 
-
     public int getPort() {
         return port;
     }

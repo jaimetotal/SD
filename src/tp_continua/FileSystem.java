@@ -3,15 +3,12 @@ package tp_continua;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 12-11-2013
- * Time: 21:07
- * Student Number: 8090309
+ * Logical view over OS filesystem and remote files
  */
 public class FileSystem {
 
@@ -48,13 +45,23 @@ public class FileSystem {
 
     public void addFile(PeerFile peerFile) {
         logger.info("Adding file %s from %s.", peerFile, peerFile.getNode());
-        //TODO revert comment if (!peerFiles.contains(peerFile)) {
-        peerFiles.add(peerFile);
-        //}
+        if (!peerFiles.contains(peerFile)) {
+            peerFiles.add(peerFile);
+        }
     }
 
     public Collection<PeerFile> listFiles() {
         return peerFiles;
+    }
+
+    public Collection<PeerFile> remoteFiles() {
+        ArrayList<PeerFile> list = new ArrayList<>();
+        for (PeerFile f : peerFiles) {
+            if (!f.isLocal()) {
+                list.add(f);
+            }
+        }
+        return list;
     }
 
     public Index getIndex() {

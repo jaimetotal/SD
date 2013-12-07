@@ -5,29 +5,22 @@ import tp_continua.Peer;
 import java.util.EventObject;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 19-11-2013
- * Time: 21:25
- * Student Number: 8090309
+ * Event for when a network transmission has been received by a given protocol
  */
 public class IncomingTransmissionEvent extends EventObject {
-    /**
-     * Constructs a prototypical Event.
-     *
-     * @param source The object on which the Event initially occurred.
-     * @throws IllegalArgumentException
-     *          if source is null.
-     */
 
-    public enum Protocol
-    {
+    public enum Protocol {
         TCP, UDP
     }
 
     private String message;
     private Protocol protocol;
 
+    /**
+     * @param source   Peer which open connection
+     * @param message  Token received within the message
+     * @param protocol Protocol used for transmission
+     */
     public IncomingTransmissionEvent(Peer source, String message, Protocol protocol) {
         super(source);
         this.message = message;

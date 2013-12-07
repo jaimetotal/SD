@@ -17,18 +17,15 @@ import java.util.Scanner;
  */
 public class QueryFiles implements Runnable {
 
-    private ClientConnectionManager connectionManager;
     private Client client;
     private InternalLogger logger;
 
     /**
      * Constructor for QueryFiles
      *
-     * @param connectionManager Connection manager to obtain connections to server
-     * @param client            Client associated to fire events
+     * @param client Client associated to fire events
      */
-    public QueryFiles(ClientConnectionManager connectionManager, Client client) {
-        this.connectionManager = connectionManager;
+    public QueryFiles(Client client) {
         this.client = client;
         logger = InternalLogger.getLogger(this.getClass());
     }
@@ -46,12 +43,12 @@ public class QueryFiles implements Runnable {
             logger.info("Starting File querying");
 
             logger.info("Sending multicast message: %s ", ConnectionManager.QUERY_FILES);
-            connectionManager.sendMulticast(ConnectionManager.QUERY_FILES);
+            ConnectionManager.sendMulticast(ConnectionManager.QUERY_FILES);
             //Receives ConnectionManager.QUERY_FILES_ACK + PORT SIZE + \n
             byte[] responseBuf = new byte[ConnectionManager.QUERY_FILES_ACK.length() + 5];
             DatagramPacket packet = new DatagramPacket(responseBuf, responseBuf.length);
 
-            responseSocket = connectionManager.getUDPSocket(true);
+            responseSocket = ConnectionManager.getUDPSocket(true);
 
             boolean timeOut = false;
             while (!timeOut) {
@@ -98,7 +95,7 @@ public class QueryFiles implements Runnable {
         public void run() {
             logger.info("Parsing files' list");
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            connectionManager.downloadContent(out, node, ConnectionManager.QUERY_FILES);
+            ConnectionManager.downloadContent(out, node, ConnectionManager.QUERY_FILES);
 
             try (ByteArrayInputStream stream = new ByteArrayInputStream(out.toByteArray())) {
                 ObjectInputStream objectInputStream = new ObjectInputStream(stream);
