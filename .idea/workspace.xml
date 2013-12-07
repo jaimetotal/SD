@@ -2,18 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/tp_continua/InternalLogger.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/log4j2.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/server/Acknowledge.java" afterPath="$PROJECT_DIR$/src/tp_continua/server/Acknowledge.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/client/Client.java" afterPath="$PROJECT_DIR$/src/tp_continua/client/Client.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/ConnectionManager.java" afterPath="$PROJECT_DIR$/src/tp_continua/ConnectionManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/FileSystem.java" afterPath="$PROJECT_DIR$/src/tp_continua/FileSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/Main.java" afterPath="$PROJECT_DIR$/src/tp_continua/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/Peer.java" afterPath="$PROJECT_DIR$/src/tp_continua/Peer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/PeerFile.java" afterPath="$PROJECT_DIR$/src/tp_continua/PeerFile.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/client/QueryFailedEvent.java" afterPath="$PROJECT_DIR$/src/tp_continua/client/QueryFailedEvent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tp_continua/client/QueryFiles.java" afterPath="$PROJECT_DIR$/src/tp_continua/client/QueryFiles.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SD_Exe.iml" afterPath="$PROJECT_DIR$/SD_Exe.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SD_Exe.iws" />
@@ -21,7 +9,7 @@
     <file path="/Client.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1386428340689" ignored="false" />
     <file path="/Main.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1386428747157" ignored="false" />
     <file path="/fragment.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1386108723281" ignored="false" />
-    <file path="/Dummy.txt" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1386411211459" ignored="false" />
+    <file path="/Dummy.txt" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1386430810550" ignored="false" />
     <file path="/Server.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1386104925646" ignored="false" />
     <file path="/QuoteClient.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1383685624717" ignored="false" />
     <file path="/ClockMaste.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1383687410066" ignored="false" />
@@ -56,6 +44,9 @@
     <file path="$PROJECT_DIR$/src/ex1/Client.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1385510760901" ignored="false" />
     <file path="/QueryCompletedEvent.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1386107481574" ignored="false" />
     <file path="/InternalLogger.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1386429675347" ignored="false" />
+    <file path="$PROJECT_DIR$/src/tp_continua/client/QueryFiles.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1386430815720" ignored="false" />
+    <file path="$PROJECT_DIR$/src/tp_continua/client/QueryFailedEvent.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1386430815720" ignored="false" />
+    <file path="$PROJECT_DIR$/src/tp_continua/client/Client.java" changelist="57760e0c-7b43-4b6e-9dfa-e2cab94bb882" time="1386430815720" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,7 +111,7 @@
       <file leaf-file-name="InternalLogger.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/tp_continua/InternalLogger.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="61" column="5" selection-start="1314" selection-end="1314" vertical-scroll-proportion="0.78474116">
+            <state line="56" column="5" selection-start="1291" selection-end="1291" vertical-scroll-proportion="0.78474116">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -164,10 +155,10 @@
         <option value="$PROJECT_DIR$/src/tp_continua/FileSystem.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/client/Client.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/Main.java" />
-        <option value="$PROJECT_DIR$/src/tp_continua/InternalLogger.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/client/QueryFiles.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/client/QueryFailedEvent.java" />
         <option value="$PROJECT_DIR$/src/tp_continua/ConnectionManager.java" />
+        <option value="$PROJECT_DIR$/src/tp_continua/InternalLogger.java" />
       </list>
     </option>
   </component>
@@ -458,7 +449,11 @@
       <created>1386273191288</created>
       <updated>1386273191288</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Logging">
+      <created>1386430815366</created>
+      <updated>1386430815366</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -492,7 +487,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32935154" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32935154" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32993197" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.23549488" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -548,7 +543,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor File to PeerFile&#10;Load files from folder in filesystem" />
+    <option name="LAST_COMMIT_MESSAGE" value="Logging" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -564,6 +559,7 @@
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
     <MESSAGE value="Add multicast listener" />
     <MESSAGE value="Refactor File to PeerFile&#10;Load files from folder in filesystem" />
+    <MESSAGE value="Logging" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -676,7 +672,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/tp_continua/InternalLogger.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="5" selection-start="1314" selection-end="1314" vertical-scroll-proportion="0.78474116">
+        <state line="56" column="5" selection-start="1291" selection-end="1291" vertical-scroll-proportion="0.78474116">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
