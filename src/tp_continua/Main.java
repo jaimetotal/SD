@@ -4,6 +4,8 @@ import tp_continua.client.Client;
 import tp_continua.client.FileAlreadyDownloadingException;
 import tp_continua.server.Server;
 
+import java.io.IOException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: AntónioJaime
@@ -17,22 +19,20 @@ public class Main {
     private static Server server;
     private static FileSystem fs;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         fs = new FileSystem(".\\filesamples");
-        client = new Client(fs);
-        client.start();
         server = new Server(fs);
         server.start();
-        boolean exit = false;
-        do {
-//            try {
-            queryFiles();
-            //System.in.read();
-            queryFiles();
-/*            } catch (IOException e) {
+        client = new Client(fs);
+        client.start();
+        queryFiles();
+        while (true) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+        }
 
-            }*/
-        } while (!exit);
     }
 
     private static void queryFiles() {

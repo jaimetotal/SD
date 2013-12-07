@@ -44,7 +44,7 @@ public class FileSystem {
     }
 
     public void addFile(PeerFile peerFile) {
-        logger.info("Adding file %s.", peerFile);
+        logger.info("Adding file %s from %s.", peerFile, peerFile.getNode());
         if (!peerFiles.contains(peerFile)) {
             peerFiles.add(peerFile);
         }
@@ -65,13 +65,9 @@ public class FileSystem {
      * @param index
      */
     public void addRemoteIndex(Peer source, Index index) {
-        logger.info("Updating file system with files from %s.", source);
         for (String fileName : index.getFilesName()) {
             PeerFile peerFile = new PeerFile(fileName, source);
-            //TODO   if (this.peerFiles.contains(peerFile)) {
-            logger.info("Adding file %s from source %s.");
-            this.addFile(peerFile);
-            //  }
+            addFile(peerFile);
         }
     }
 

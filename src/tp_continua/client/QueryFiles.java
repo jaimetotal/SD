@@ -43,24 +43,28 @@ public class QueryFiles implements Runnable {
     public void run() {
         DatagramSocket responseSocket = null;
         try {
-            logger.warn("Starting File querying");
-            responseSocket = connectionManager.getUDPSocket(true);
-            logger.warn("Sending multicast message: %s ", ConnectionManager.QUERY_FILES);
+            logger.info("Starting File querying");
+
+            logger.info("Sending multicast message: %s ", ConnectionManager.QUERY_FILES);
             connectionManager.sendMulticast(ConnectionManager.QUERY_FILES);
             //Receives ConnectionManager.QUERY_FILES_ACK + PORT SIZE + \n
             byte[] responseBuf = new byte[ConnectionManager.QUERY_FILES_ACK.length() + 5];
             DatagramPacket packet = new DatagramPacket(responseBuf, responseBuf.length);
 
+            responseSocket = connectionManager.getUDPSocket(true);
+
             boolean timeOut = false;
             while (!timeOut) {
                 try {
+                    logger.info("Standing by for any response");
+
                     responseSocket.receive(packet);
-                    String messageReceived = packet.getData().toString();
+                    String messageReceived = new String(packet.getData());
                     logger.info("Message received from %s:%s: %s.", packet.getAddress(), packet.getPort(), messageReceived);
                     if (messageReceived.startsWith(ConnectionManager.QUERY_FILES_ACK)) {
-                        int port = new Scanner(messageReceived).nextInt();
+                        int port = new Scanner(messageReceived.substring(ConnectionManager.QUERY_FILES_ACK.length())).nextInt();
                         logger.info("Port available to fetch files' list: " + port);
-                        new Thread(new FetchQuery(new Peer(packet.getAddress(), port)));
+                        new Thread(new FetchQuery(new Peer(packet.getAddress(), port))).start();
                     }
                 } catch (java.net.SocketTimeoutException ex) {
                     timeOut = true;
@@ -98,9 +102,8 @@ public class QueryFiles implements Runnable {
                 Index index = (Index) objectInputStream.readObject();
                 client.queryCompleted(new QueryCompletedEvent(index, node));
                 objectInputStream.close();
-            } catch (IOException e) {
-                client.queryFailed(new QueryFailedEvent(node));
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
+                logger.error(e, "Error while trying to parse files's list");
                 client.queryFailed(new QueryFailedEvent(node));
             }
         }

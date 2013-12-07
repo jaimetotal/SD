@@ -37,11 +37,13 @@ public class ConnectionManager {
         DatagramSocket responseSocket = null;
         try {
             if (setPort) {
-                responseSocket = new DatagramSocket(ConnectionManager.SERVER_TCP_PORT);
+                responseSocket = new DatagramSocket(ConnectionManager.CLIENT_UDP_PORT);
+                logger.info("Obtained UDP socket open in port: %d", ConnectionManager.CLIENT_UDP_PORT);
             } else {
                 responseSocket = new DatagramSocket();
+                logger.info("Obtained UDP socket open in port: %d", responseSocket.getPort());
             }
-            logger.info("UDP socket open in port: %d", ConnectionManager.SERVER_TCP_PORT);
+
             responseSocket.setSoTimeout(ConnectionManager.MULTICAST_TIMEOUT);
         } catch (SocketException e) {
             logger.error(e, "Error while opening socket.");
@@ -52,7 +54,7 @@ public class ConnectionManager {
     public void sendMulticast(String message) {
         InetAddress group;
         byte[] buf = message.getBytes();
-        try (DatagramSocket socket = new DatagramSocket(ConnectionManager.CLIENT_UDP_PORT)) {
+        try (DatagramSocket socket = new DatagramSocket()) {
             group = InetAddress.getByName(ConnectionManager.MULTICAST_ADDRESS);
             DatagramPacket packet = new DatagramPacket(buf, buf.length, group, ConnectionManager.MULTICAST_PORT);
             socket.send(packet);

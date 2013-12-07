@@ -1,6 +1,7 @@
 package tp_continua.server;
 
 import tp_continua.Index;
+import tp_continua.InternalLogger;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -11,6 +12,7 @@ import java.net.Socket;
  */
 public class ListFiles implements Runnable {
 
+    private final InternalLogger logger;
     private Socket socket;
     private Index index;
 
@@ -23,6 +25,7 @@ public class ListFiles implements Runnable {
     public ListFiles(Socket socket, Index index) {
         this.socket = socket;
         this.index = index;
+        logger = InternalLogger.getLogger(this.getClass());
     }
 
     /**
@@ -30,11 +33,13 @@ public class ListFiles implements Runnable {
      */
     @Override
     public void run() {
+        logger.info("Starting to list files for incoming request.");
         try {
             ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
             objectOutput.writeObject(index);
+            objectOutput.close();
         } catch (IOException e) {
-            //In this case, the connection will fail and the client won't receive the list
+            logger.error(e, "Error while trying to send index.");
         } finally {
             try {
                 socket.close();
