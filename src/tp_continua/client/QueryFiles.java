@@ -6,7 +6,7 @@ import tp_continua.InternalLogger;
 import tp_continua.Peer;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -64,7 +64,7 @@ public class QueryFiles implements Runnable {
                     if (messageReceived.startsWith(ConnectionManager.QUERY_FILES_ACK)) {
                         int port = new Scanner(messageReceived.substring(ConnectionManager.QUERY_FILES_ACK.length())).nextInt();
                         logger.info("Port available to fetch files' list: " + port);
-                        new Thread(new FetchQuery(new Peer(packet.getAddress(), port))).start();
+                        new Thread(new FetchList(new Peer(packet.getAddress(), port))).start();
                     }
                 } catch (java.net.SocketTimeoutException ex) {
                     timeOut = true;
@@ -84,10 +84,10 @@ public class QueryFiles implements Runnable {
     /**
      * Small runnable to parse Peer's files
      */
-    private class FetchQuery implements Runnable {
+    private class FetchList implements Runnable {
         private Peer node;
 
-        private FetchQuery(Peer node) {
+        private FetchList(Peer node) {
             this.node = node;
         }
 
@@ -97,13 +97,17 @@ public class QueryFiles implements Runnable {
         @Override
         public void run() {
             logger.info("Parsing files' list");
-            try (ByteArrayInputStream stream = connectionManager.getInputStream(node, ConnectionManager.QUERY_FILES)) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            connectionManager.downloadContent(out, node, ConnectionManager.QUERY_FILES);
+
+            try (ByteArrayInputStream stream = new ByteArrayInputStream(out.toByteArray())) {
                 ObjectInputStream objectInputStream = new ObjectInputStream(stream);
                 Index index = (Index) objectInputStream.readObject();
-                client.queryCompleted(new QueryCompletedEvent(index, node));
                 objectInputStream.close();
-            } catch (IOException | ClassNotFoundException e) {
-                logger.error(e, "Error while trying to parse files's list");
+                logger.info("Parsing completed. Total files: %d", index.getFilesName().size());
+                client.queryCompleted(new QueryCompletedEvent(index, node));
+            } catch (Exception e) {
+                logger.error(e, "Error while trying to parse files' list");
                 client.queryFailed(new QueryFailedEvent(node));
             }
         }

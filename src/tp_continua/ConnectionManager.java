@@ -15,15 +15,14 @@ public class ConnectionManager {
     public static int MULTICAST_TIMEOUT = 1000;
     public static String MULTICAST_ADDRESS = "230.0.0.1";
     public static int MULTICAST_PORT = 4456;
-    private final InternalLogger logger;
+    private static final InternalLogger logger = InternalLogger.getLogger(ConnectionManager.class);
 
     public ConnectionManager() {
         //TODO Fetch properties
-        logger = InternalLogger.getLogger(this.getClass());
     }
 
 
-    public Socket getTCPSocketToPeer(Peer node) {
+    public static Socket getTCPSocketToPeer(Peer node) {
         try {
             logger.info("Opening socket for %s:%d", node.getAddress().toString(), ConnectionManager.SERVER_TCP_PORT);
             return new Socket(node.getAddress().toString(), ConnectionManager.SERVER_TCP_PORT);
@@ -33,7 +32,7 @@ public class ConnectionManager {
         return null;
     }
 
-    public DatagramSocket getUDPSocket(boolean setPort) {
+    public static DatagramSocket getUDPSocket(boolean setPort) {
         DatagramSocket responseSocket = null;
         try {
             if (setPort) {
@@ -51,7 +50,7 @@ public class ConnectionManager {
         return responseSocket;
     }
 
-    public void sendMulticast(String message) {
+    public static void sendMulticast(String message) {
         InetAddress group;
         byte[] buf = message.getBytes();
         try (DatagramSocket socket = new DatagramSocket()) {
@@ -71,27 +70,59 @@ public class ConnectionManager {
         return new ByteArrayInputStream(getOutputStream(node, command).toByteArray());
     }
 
-    public ByteArrayOutputStream getOutputStream(Peer node, String token) {
+    public static void uploadContent(InputStream inputStream, Socket socket) throws IOException {
+        OutputStream out = socket.getOutputStream();
+        IOUtils.copy(inputStream, out);
+        out.flush();
+        out.close();
+        inputStream.close();
+    }
+
+    public static void downloadContent(OutputStream outputStream, Peer node, String token) {
+        InputStream in;
+        try (Socket socket = getTCPSocketToPeer(node)) {
+            //Sends token
+            logger.info("Sending message to target %s:", token);
+            PrintWriter streamWriter = new PrintWriter(socket.getOutputStream(), true);
+            streamWriter.println(token);
+            logger.info("Now waiting for input.");
+            //Receives content
+            in = socket.getInputStream();
+            IOUtils.copy(in, outputStream);
+            logger.info("Input received.");
+            outputStream.flush();
+            socket.close();
+            outputStream.close();
+            in.close();
+        } catch (IOException e) {
+            logger.error(e, "Error while trying to obtain output stream from socket.");
+        }
+    }
+
+    public static ByteArrayOutputStream getOutputStream(Peer node, String token) {
 
         InputStream in;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (Socket socket = getTCPSocketToPeer(node)) {
             //Sends token
+            logger.info("Sending message to target %s:", token);
             PrintWriter streamWriter = new PrintWriter(socket.getOutputStream(), true);
             streamWriter.println(token);
+            logger.info("Now waiting for input.");
             //Receives content
             in = socket.getInputStream();
             IOUtils.copy(in, out);
+            logger.info("Input received.");
             socket.close();
             out.close();
             in.close();
         } catch (IOException e) {
-            //TODO
+            logger.error(e, "Error while trying to obtain output stream from socket.");
         }
         return out;
     }
 
-    public MulticastSocket getMulticastListenerSocket() throws IOException {
+    public static MulticastSocket getMulticastListenerSocket() throws IOException {
         MulticastSocket socket = new MulticastSocket(ConnectionManager.MULTICAST_PORT);
         InetAddress address = InetAddress.getByName(ConnectionManager.MULTICAST_ADDRESS);
         socket.joinGroup(address);

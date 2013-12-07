@@ -1,8 +1,11 @@
 package tp_continua.server;
 
+import tp_continua.ConnectionManager;
 import tp_continua.Index;
 import tp_continua.InternalLogger;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -35,16 +38,13 @@ public class ListFiles implements Runnable {
     public void run() {
         logger.info("Starting to list files for incoming request.");
         try {
-            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
-            objectOutput.writeObject(index);
-            objectOutput.close();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try (ObjectOutputStream objectOutput = new ObjectOutputStream(out)) {
+                objectOutput.writeObject(index);
+                ConnectionManager.uploadContent(new ByteArrayInputStream(out.toByteArray()), socket);
+            }
         } catch (IOException e) {
             logger.error(e, "Error while trying to send index.");
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException e) {
-            }
         }
     }
 }

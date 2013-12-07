@@ -32,7 +32,6 @@ public class ServerConnectionManager extends ConnectionManager {
      */
     public ServerConnectionManager(Server server, ExecutorService executorService) throws IOException {
         logger = InternalLogger.getLogger(this.getClass());
-        ;
         this.server = server;
         this.executorService = executorService;
         this.executorService.submit(new IncomingTCP());
@@ -67,12 +66,12 @@ public class ServerConnectionManager extends ConnectionManager {
                     logger.info("Accepted a new connection");
                     Peer client = new Peer(incomingSocket.getInetAddress(), incomingSocket.getPort());
                     logger.info("Incoming TCP from %s.", client);
-                    BufferedReader stdIn = new BufferedReader(new InputStreamReader(incomingSocket.getInputStream()));
+                    InputStreamReader input = new InputStreamReader(incomingSocket.getInputStream());
+                    BufferedReader stdIn = new BufferedReader(input);
                     String message = stdIn.readLine();
-                    //stdIn.close(); can't close buffer as it will also close socket
 
                     logger.info("Firing IncomingTCPTransmissionEvent.");
-                    IncomingTCPTransmissionEvent event = new IncomingTCPTransmissionEvent(client, message, incomingSocket);
+                    IncomingTCPTransmissionEvent event = new IncomingTCPTransmissionEvent(client, message, incomingSocket, stdIn);
                     server.incomingTCPTransmission(event);
                 } catch (IOException e) {
                     logger.error(e, "Error while waiting for incoming TCP.");

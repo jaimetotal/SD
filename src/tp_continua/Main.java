@@ -25,14 +25,17 @@ public class Main {
         server.start();
         client = new Client(fs);
         client.start();
-        queryFiles();
-        while (true) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-        }
+        downloadDemo();
+    }
 
+    private static void downloadDemo() {
+        queryFiles();
+        try {
+            System.out.println("Sleeping for 5 secs.");
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+        }
+        downloadFile();
     }
 
     private static void queryFiles() {
@@ -41,7 +44,7 @@ public class Main {
 
     private static void downloadFile() {
         try {
-            client.getFile((PeerFile) fs.listFiles().toArray()[0]);
+            client.getFile((PeerFile) fs.listFiles().toArray()[5]);
         } catch (FileAlreadyDownloadingException e) {
             System.out.println("Já querias n?");
         }

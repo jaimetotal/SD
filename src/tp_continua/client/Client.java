@@ -78,7 +78,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
             throw new FileAlreadyDownloadingException(peerFile);
         }
         logger.info("File download %s in queue.", peerFile);
-        Future<?> future = executorService.submit(new Download(connectionManager, peerFile, this));
+        Future<?> future = executorService.submit(new Download(peerFile, this));
         filesDownloading.put(peerFile, future);
     }
 
@@ -105,6 +105,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      */
     @Override
     public void downloadCompleted(DownloadCompletedEvent e) {
+        logger.info("Download completed for %s." + e.getSource());
         filesDownloading.remove(e.getSource());
         try {
             fileSystem.updateFile(e.getSource());
@@ -123,6 +124,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      */
     @Override
     public void downloadFailed(DownloadFailedEvent e) {
+        logger.info("Download failed for %s." + e.getSource());
         filesDownloading.remove(e.getSource());
         for (DownloadFailedEvent.DownloadFailedEventListener listener : downloadFailedEventListeners) {
             listener.downloadFailed(e);

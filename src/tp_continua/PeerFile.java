@@ -1,7 +1,6 @@
 package tp_continua;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,7 +26,8 @@ public class PeerFile {
         this.isLocal = true;
     }
 
-    public PeerFile(String fileName, Peer node) {
+    public PeerFile(String fileName, Peer node, String path) {
+        this.filePath = Paths.get(path, fileName);
         this.fileName = fileName;
         this.node = node;
     }
@@ -36,17 +36,25 @@ public class PeerFile {
         return fileName;
     }
 
-    public synchronized byte[] getContents() throws IOException {
-        if (isLocal) {
-            return Files.readAllBytes(filePath);
+    public synchronized InputStream getContentsStream() {
+        if (!isLocal) return null;
+        try {
+            return new FileInputStream(filePath.toString());
+        } catch (FileNotFoundException e) {
+            return null;
         }
-        return contents;
     }
 
-    public synchronized void setContents(byte[] contents) {
-        this.contents = contents;
+
+    public synchronized OutputStream getDestinationStream() throws IOException {
+        File file = new File(filePath.toString());
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        return new FileOutputStream(file);
     }
 
+    @Deprecated
     public synchronized void writeToDisk(String path) throws IOException {
         if (contents == null || isLocal) return;
         this.filePath = Paths.get(path, fileName);

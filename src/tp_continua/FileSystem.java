@@ -26,7 +26,10 @@ public class FileSystem {
         File folder = new File(path);
         if (folder.isDirectory()) {
             for (File file : folder.listFiles()) {
-                peerFiles.add(new PeerFile(file.getAbsolutePath()));
+                //Filters for files in only the sub folder
+                if (file.isFile()) {
+                    peerFiles.add(new PeerFile(file.getAbsolutePath()));
+                }
             }
         }
     }
@@ -45,9 +48,9 @@ public class FileSystem {
 
     public void addFile(PeerFile peerFile) {
         logger.info("Adding file %s from %s.", peerFile, peerFile.getNode());
-        if (!peerFiles.contains(peerFile)) {
-            peerFiles.add(peerFile);
-        }
+        //TODO revert comment if (!peerFiles.contains(peerFile)) {
+        peerFiles.add(peerFile);
+        //}
     }
 
     public Collection<PeerFile> listFiles() {
@@ -66,10 +69,11 @@ public class FileSystem {
      */
     public void addRemoteIndex(Peer source, Index index) {
         for (String fileName : index.getFilesName()) {
-            PeerFile peerFile = new PeerFile(fileName, source);
+            PeerFile peerFile = new PeerFile(fileName, source, path + "\\YELLOW");
             addFile(peerFile);
         }
     }
+
 
     /**
      * Adds file to filesystem if not added already and writes its contents to the disk, making it local
@@ -77,13 +81,15 @@ public class FileSystem {
      * @param source File to be saved
      * @throws IOException Error reported by the system when trying to save the file
      */
+    @Deprecated
     public void updateFile(PeerFile source) throws IOException {
         if (!peerFiles.contains(source)) {
             peerFiles.add(source);
         }
+
         logger.info("Saving file %s to disk.", source);
         if (!source.isLocal() && !source.isPreview()) {
-            source.writeToDisk(path);
+            source.writeToDisk(path + "\\YELLOW");
         }
     }
 }

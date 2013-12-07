@@ -38,7 +38,7 @@ public class Server extends Thread implements IncomingTCPTransmissionEvent.Incom
         if (event.getMessage().equals(ConnectionManager.QUERY_FILES)) {
             executorService.submit(new ListFiles(event.getSocket(), fileSystem.getIndex()));
         } else if (event.getMessage().equals(ConnectionManager.DOWNLOAD_FILE)) {
-            executorService.submit(new UploadFile(event.getSocket(), fileSystem));
+            executorService.submit(new UploadFile(event.getSocket(), fileSystem, event.getStdIn()));
         } else {
             try {
                 event.getSocket().close();
