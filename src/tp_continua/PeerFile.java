@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,9 +19,11 @@ public class PeerFile {
     private byte[] contents;
     private Peer node;
     private boolean isLocal;
+    private Path filePath;
 
     public PeerFile(String fileName) {
-        this.fileName = fileName;
+        this.filePath = Paths.get(fileName);
+        this.fileName = filePath.getFileName().toString();
         this.isLocal = true;
     }
 
@@ -37,7 +38,7 @@ public class PeerFile {
 
     public synchronized byte[] getContents() throws IOException {
         if (isLocal) {
-            return Files.readAllBytes(Paths.get(fileName));
+            return Files.readAllBytes(filePath);
         }
         return contents;
     }
@@ -48,9 +49,9 @@ public class PeerFile {
 
     public synchronized void writeToDisk(String path) throws IOException {
         if (contents == null || isLocal) return;
-        Path destination = Paths.get(path, fileName);
+        this.filePath = Paths.get(path, fileName);
         ByteArrayInputStream in = new ByteArrayInputStream(contents);
-        Files.copy(in, destination);
+        Files.copy(in, filePath);
         contents = null;
         isLocal = true;
         node = null;
@@ -78,14 +79,15 @@ public class PeerFile {
 
     @Override
     public int hashCode() {
-        int result = fileName.hashCode();
-        result = 31 * result + (contents != null ? Arrays.hashCode(contents) : 0);
-        result = 31 * result + node.hashCode();
-        result = 31 * result + (isLocal ? 1 : 0);
-        return result;
+        return fileName.hashCode();
     }
 
     public boolean isPreview() {
         return contents == null;
+    }
+
+    @Override
+    public String toString() {
+        return fileName;
     }
 }

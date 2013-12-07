@@ -15,37 +15,42 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class FileSystem {
 
+    private final InternalLogger logger;
     private CopyOnWriteArrayList<PeerFile> peerFiles;
     private String path;
 
     public FileSystem(String path) {
+        logger = InternalLogger.getLogger(this.getClass());
         this.path = path;
         peerFiles = new CopyOnWriteArrayList<PeerFile>();
         File folder = new File(path);
         if (folder.isDirectory()) {
             for (File file : folder.listFiles()) {
-                peerFiles.add(new PeerFile(file.getName()));
+                peerFiles.add(new PeerFile(file.getAbsolutePath()));
             }
         }
     }
 
     public PeerFile getFileByName(String fileName) {
+        logger.info("Searching for file %s.", fileName);
         for (PeerFile peerFile : peerFiles) {
             if (peerFile.getFileName().equals(fileName)) {
+                logger.info("File %s found.", fileName);
                 return peerFile;
             }
         }
+        logger.info("File %s not found.", fileName);
         return null;
     }
 
     public void addFile(PeerFile peerFile) {
+        logger.info("Adding file %s.", peerFile);
         if (!peerFiles.contains(peerFile)) {
             peerFiles.add(peerFile);
         }
     }
 
     public Collection<PeerFile> listFiles() {
-        //TODO check readonly collections
         return peerFiles;
     }
 
@@ -60,11 +65,13 @@ public class FileSystem {
      * @param index
      */
     public void addRemoteIndex(Peer source, Index index) {
+        logger.info("Updating file system with files from %s.", source);
         for (String fileName : index.getFilesName()) {
             PeerFile peerFile = new PeerFile(fileName, source);
-            if (this.peerFiles.contains(peerFile)) {
-                this.addFile(peerFile);
-            }
+            //TODO   if (this.peerFiles.contains(peerFile)) {
+            logger.info("Adding file %s from source %s.");
+            this.addFile(peerFile);
+            //  }
         }
     }
 
@@ -78,6 +85,7 @@ public class FileSystem {
         if (!peerFiles.contains(source)) {
             peerFiles.add(source);
         }
+        logger.info("Saving file %s to disk.", source);
         if (!source.isLocal() && !source.isPreview()) {
             source.writeToDisk(path);
         }

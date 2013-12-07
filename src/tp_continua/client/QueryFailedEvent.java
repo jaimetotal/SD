@@ -19,9 +19,14 @@ public class QueryFailedEvent extends EventObject {
         super(source);
     }
 
+    public QueryFailedEvent() {
+        super("Global");
+    }
+
 
     @Override
     public Peer getSource() {
+        if (super.getSource().equals("Global")) return null;
         return (Peer) super.getSource();
     }
 

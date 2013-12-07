@@ -1,9 +1,8 @@
 package tp_continua;
 
 import tp_continua.client.Client;
+import tp_continua.client.FileAlreadyDownloadingException;
 import tp_continua.server.Server;
-
-import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,21 +15,36 @@ public class Main {
 
     private static Client client;
     private static Server server;
+    private static FileSystem fs;
 
     public static void main(String[] args) {
-        FileSystem fs = new FileSystem(".\\filesamples");
+        fs = new FileSystem(".\\filesamples");
         client = new Client(fs);
         client.start();
         server = new Server(fs);
         server.start();
         boolean exit = false;
         do {
-            try {
-                System.in.read();
-            } catch (IOException e) {
+//            try {
+            queryFiles();
+            //System.in.read();
+            queryFiles();
+/*            } catch (IOException e) {
 
-            }
+            }*/
         } while (!exit);
+    }
+
+    private static void queryFiles() {
+        client.queryNetwork();
+    }
+
+    private static void downloadFile() {
+        try {
+            client.getFile((PeerFile) fs.listFiles().toArray()[0]);
+        } catch (FileAlreadyDownloadingException e) {
+            System.out.println("Já querias n?");
+        }
     }
 
 }

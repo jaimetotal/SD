@@ -2,6 +2,7 @@ package tp_continua.client;
 
 import tp_continua.ConnectionManager;
 import tp_continua.Index;
+import tp_continua.InternalLogger;
 import tp_continua.Peer;
 
 import java.io.ByteArrayInputStream;
@@ -18,6 +19,7 @@ public class QueryFiles implements Runnable {
 
     private ClientConnectionManager connectionManager;
     private Client client;
+    private InternalLogger logger;
 
     /**
      * Constructor for QueryFiles
@@ -28,6 +30,7 @@ public class QueryFiles implements Runnable {
     public QueryFiles(ClientConnectionManager connectionManager, Client client) {
         this.connectionManager = connectionManager;
         this.client = client;
+        logger = InternalLogger.getLogger(this.getClass());
     }
 
     /**
@@ -38,8 +41,11 @@ public class QueryFiles implements Runnable {
      */
     @Override
     public void run() {
+        DatagramSocket responseSocket = null;
         try {
-            DatagramSocket responseSocket = connectionManager.getUDPSocket();
+            logger.warn("Starting File querying");
+            responseSocket = connectionManager.getUDPSocket(true);
+            logger.warn("Sending multicast message: %s ", ConnectionManager.QUERY_FILES);
             connectionManager.sendMulticast(ConnectionManager.QUERY_FILES);
             //Receives ConnectionManager.QUERY_FILES_ACK + PORT SIZE + \n
             byte[] responseBuf = new byte[ConnectionManager.QUERY_FILES_ACK.length() + 5];
@@ -50,8 +56,10 @@ public class QueryFiles implements Runnable {
                 try {
                     responseSocket.receive(packet);
                     String messageReceived = packet.getData().toString();
+                    logger.info("Message received from %s:%s: %s.", packet.getAddress(), packet.getPort(), messageReceived);
                     if (messageReceived.startsWith(ConnectionManager.QUERY_FILES_ACK)) {
                         int port = new Scanner(messageReceived).nextInt();
+                        logger.info("Port available to fetch files' list: " + port);
                         new Thread(new FetchQuery(new Peer(packet.getAddress(), port)));
                     }
                 } catch (java.net.SocketTimeoutException ex) {
@@ -59,7 +67,12 @@ public class QueryFiles implements Runnable {
                 }
             }
         } catch (Exception e) {
-            client.queryFailed(new QueryFailedEvent(null));
+            logger.error(e, "Error while waiting for responses.");
+            client.queryFailed(new QueryFailedEvent());
+        } finally {
+            if (responseSocket != null) {
+                responseSocket.close();
+            }
         }
     }
 
@@ -79,6 +92,7 @@ public class QueryFiles implements Runnable {
          */
         @Override
         public void run() {
+            logger.info("Parsing files' list");
             try (ByteArrayInputStream stream = connectionManager.getInputStream(node, ConnectionManager.QUERY_FILES)) {
                 ObjectInputStream objectInputStream = new ObjectInputStream(stream);
                 Index index = (Index) objectInputStream.readObject();

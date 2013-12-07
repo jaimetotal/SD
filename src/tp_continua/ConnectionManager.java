@@ -5,13 +5,6 @@ import org.apache.commons.io.IOUtils;
 import java.io.*;
 import java.net.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 12-11-2013
- * Time: 21:07
- * Student Number: 8090309
- */
 public class ConnectionManager {
 
     public static final String QUERY_FILES = "QUERY_FILES";
@@ -22,55 +15,54 @@ public class ConnectionManager {
     public static int MULTICAST_TIMEOUT = 1000;
     public static String MULTICAST_ADDRESS = "230.0.0.1";
     public static int MULTICAST_PORT = 4456;
+    private final InternalLogger logger;
 
     public ConnectionManager() {
         //TODO Fetch properties
+        logger = InternalLogger.getLogger(this.getClass());
     }
 
 
     public Socket getTCPSocketToPeer(Peer node) {
         try {
-            //TODO Query port for stream
+            logger.info("Opening socket for %s:%d", node.getAddress().toString(), ConnectionManager.SERVER_TCP_PORT);
             return new Socket(node.getAddress().toString(), ConnectionManager.SERVER_TCP_PORT);
         } catch (IOException e) {
-
+            logger.error(e, "Error while trying to open TCP Socket.");
         }
         return null;
     }
 
-    public DatagramSocket getUDPSocket() {
-        //TODO Receive socket from the ConnectionManager
+    public DatagramSocket getUDPSocket(boolean setPort) {
         DatagramSocket responseSocket = null;
         try {
-            responseSocket = new DatagramSocket(ConnectionManager.SERVER_TCP_PORT);
-            //TODO Revise timeout
+            if (setPort) {
+                responseSocket = new DatagramSocket(ConnectionManager.SERVER_TCP_PORT);
+            } else {
+                responseSocket = new DatagramSocket();
+            }
+            logger.info("UDP socket open in port: %d", ConnectionManager.SERVER_TCP_PORT);
             responseSocket.setSoTimeout(ConnectionManager.MULTICAST_TIMEOUT);
         } catch (SocketException e) {
-            e.printStackTrace();
-//TODO Treat exception
+            logger.error(e, "Error while opening socket.");
         }
         return responseSocket;
     }
 
     public void sendMulticast(String message) {
-        InetAddress group = null;
-        try {
-            byte[] buf = message.getBytes();
-            DatagramSocket socket = new DatagramSocket(ConnectionManager.CLIENT_UDP_PORT);
+        InetAddress group;
+        byte[] buf = message.getBytes();
+        try (DatagramSocket socket = new DatagramSocket(ConnectionManager.CLIENT_UDP_PORT)) {
             group = InetAddress.getByName(ConnectionManager.MULTICAST_ADDRESS);
             DatagramPacket packet = new DatagramPacket(buf, buf.length, group, ConnectionManager.MULTICAST_PORT);
             socket.send(packet);
         } catch (UnknownHostException e) {
-            e.printStackTrace();
-//TODO Treat exception
+            logger.error(e, "Trying to send multicast message.");
         } catch (SocketException e) {
-            e.printStackTrace();
-//TODO Treat exception
+            logger.error(e, "Trying to send multicast message.");
         } catch (IOException e) {
-            e.printStackTrace();
-//TODO Treat exception
+            logger.error(e, "Trying to send multicast message.");
         }
-
     }
 
     public ByteArrayInputStream getInputStream(Peer node, String command) {

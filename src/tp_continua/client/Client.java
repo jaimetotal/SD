@@ -1,6 +1,7 @@
 package tp_continua.client;
 
 import tp_continua.FileSystem;
+import tp_continua.InternalLogger;
 import tp_continua.PeerFile;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
     private static final short THREADQUEUE_MAXSIZE = 10;
     private static final short THREADPOOL_MAXSIZE = 5;
     private static final short MULTICAST_TIMEOUT = 10;
+    private InternalLogger logger;
 
     /**
      * Construtor of Client
@@ -33,6 +35,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      * @param fileSystem Filesystem used to save files and receive logical files location
      */
     public Client(FileSystem fileSystem) {
+        logger = InternalLogger.getLogger(this.getClass());
         this.connectionManager = new ClientConnectionManager();
         threadQueue = new ArrayBlockingQueue<Runnable>(THREADQUEUE_MAXSIZE);
         this.executorService = new ThreadPoolExecutor(THREADPOOL_MAXSIZE, THREADPOOL_MAXSIZE, Long.MAX_VALUE, TimeUnit.DAYS, threadQueue);
@@ -49,12 +52,14 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      * until reaches the timeout
      */
     public void queryNetwork() {
+        logger.info("Echoing through the network with a timeout of %d seconds.", MULTICAST_TIMEOUT);
         //Creates local executor due to awaiting termination for this Runnable only
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new QueryFiles(connectionManager, this));
         try {
             executor.awaitTermination(MULTICAST_TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
+            logger.info("File querying failed.");
             executor.shutdown();
         }
     }
@@ -67,9 +72,12 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      *          Fired when this file is already being downloaded
      */
     public void getFile(PeerFile peerFile) throws FileAlreadyDownloadingException {
+        logger.info("Trying to download file %s.", peerFile);
         if (filesDownloading.containsKey(peerFile)) {
+            logger.info("Ops. Already downloading it", peerFile);
             throw new FileAlreadyDownloadingException(peerFile);
         }
+        logger.info("File download %s in queue.", peerFile);
         Future<?> future = executorService.submit(new Download(connectionManager, peerFile, this));
         filesDownloading.put(peerFile, future);
     }
@@ -80,9 +88,13 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      * @param peerFile File's download to be cancelled
      */
     public void cancelFile(PeerFile peerFile) {
+        logger.info("Trying to cancel file %s.", peerFile);
         if (filesDownloading.containsKey(peerFile)) {
             filesDownloading.get(peerFile).cancel(true);
             filesDownloading.remove(peerFile);
+            logger.info("File cancelling %s successfully.", peerFile);
+        } else {
+            logger.warn("File cancelling %s failed.", peerFile);
         }
     }
 
@@ -124,6 +136,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      */
     @Override
     public void queryCompleted(QueryCompletedEvent e) {
+        logger.info("QueryCompletedEvent received from " + e.getSource());
         fileSystem.addRemoteIndex(e.getSource(), e.getIndex());
         for (QueryCompletedEvent.QueryCompletedEventListener listener : queryCompletedEventListener) {
             listener.queryCompleted(e);
@@ -137,6 +150,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      */
     @Override
     public void queryFailed(QueryFailedEvent e) {
+        logger.info("QueryFailedEvent received from " + e.getSource());
         for (QueryFailedEvent.QueryFailedEventListener listener : queryFailedEventListeners) {
             listener.queryFailed(e);
         }

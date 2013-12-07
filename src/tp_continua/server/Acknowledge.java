@@ -34,7 +34,7 @@ public class Acknowledge implements Runnable {
     public void run() {
         String message = String.format("%s %s", ConnectionManager.QUERY_FILES_ACK, ConnectionManager.SERVER_TCP_PORT);
         byte[] buf = message.getBytes();
-        try (DatagramSocket socket = connectionManager.getUDPSocket()) {
+        try (DatagramSocket socket = connectionManager.getUDPSocket(false)) {
             InetAddress address = InetAddress.getByName(source.getAddress());
             socket.send(new DatagramPacket(buf, buf.length, address, ConnectionManager.CLIENT_UDP_PORT));
         } catch (IOException e) {
