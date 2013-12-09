@@ -2,11 +2,9 @@ package tp_continua;
 
 import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.*;
+import java.util.Properties;
 
 public class ConnectionManager {
 
@@ -18,7 +16,25 @@ public class ConnectionManager {
     public static int MULTICAST_TIMEOUT = 1000;
     public static String MULTICAST_ADDRESS = "230.0.0.1";
     public static int MULTICAST_PORT = 4456;
+    public static boolean DUNGEON_MASTER = false;
     private static final InternalLogger logger = InternalLogger.getLogger(ConnectionManager.class);
+
+    static {
+        Properties prop = new Properties();
+        try {
+            logger.info("Loading sd.properties from %s\\%s", System.getProperty("user.dir"), "sd.properties");
+
+            prop.load(new FileInputStream(System.getProperty("user.dir") + "\\sd.properties"));
+            SERVER_TCP_PORT = Integer.parseInt(prop.getProperty("SERVER_TCP_PORT"));
+            CLIENT_UDP_PORT = Integer.parseInt(prop.getProperty("CLIENT_UDP_PORT"));
+            MULTICAST_TIMEOUT = Integer.parseInt(prop.getProperty("MULTICAST_TIMEOUT"));
+            MULTICAST_ADDRESS = prop.getProperty("MULTICAST_ADDRESS");
+            MULTICAST_PORT = Integer.parseInt(prop.getProperty("MULTICAST_PORT"));
+            DUNGEON_MASTER = Boolean.parseBoolean(prop.getProperty("DUNGEON_MASTER"));
+        } catch (Exception ex) {
+            logger.error(ex, "Error loading properties. Using default.");
+        }
+    }
 
     public ConnectionManager() {
         //TODO Fetch properties

@@ -3,6 +3,7 @@ package tp_continua;
 import tp_continua.client.*;
 import tp_continua.server.Server;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Scanner;
@@ -21,7 +22,7 @@ public class Main implements DownloadCompletedEvent.DownloadCompletedEventListen
     private FileSystem fs;
 
     public Main() throws IOException {
-        fs = new FileSystem(".\\filesamples");
+        fs = new FileSystem(".");
         server = new Server(fs);
         server.start();
         client = new Client(fs);
@@ -35,6 +36,13 @@ public class Main implements DownloadCompletedEvent.DownloadCompletedEventListen
     }
 
     public static void main(String[] args) throws IOException {
+        String classpath = System.getProperty("java.class.path");
+        String[] classpathEntries = classpath.split(File.pathSeparator);
+        System.out.println("Dir: " + System.getProperty("user.dir"));
+
+        for (String entry : classpathEntries) {
+            System.out.println("Classpath " + entry);
+        }
         new Main();
     }
 
@@ -84,23 +92,23 @@ public class Main implements DownloadCompletedEvent.DownloadCompletedEventListen
     }
 
     private void listFiles() {
-        if (fs.listFiles().isEmpty()) {
+        if (fs.remoteFiles().isEmpty()) {
             System.out.println("There isn't any available to download.");
             return;
         }
-        System.out.println("The files on network:\na) Download all");
-
         int n = 1;
         for (PeerFile f : fs.remoteFiles()) {
             System.out.println(String.format("%d) %s", n, f.getFileName()));
             n++;
         }
-        System.out.println("s) Return");
     }
 
 
     private void downloadFiles() {
+
         listFiles();
+        System.out.println("The files on network:\na) Download all");
+        System.out.println("s) Return");
         Scanner in = new Scanner(System.in);
         String next = in.next();
         switch (next) {
