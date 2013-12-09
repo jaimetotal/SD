@@ -1,18 +1,15 @@
 package tp_continua.server;
 
-import tp_continua.ConnectionManager;
-import tp_continua.FileSystem;
-import tp_continua.InternalLogger;
+import tp_continua.common.ConnectionManager;
+import tp_continua.common.FileSystem;
+import tp_continua.common.InternalLogger;
 
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.concurrent.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 12-11-2013
- * Time: 21:07
- * Student Number: 8090309
+ * Server responsible for listening incoming transmissions and answer their request
  */
 public class Server extends Thread implements IncomingTCPTransmissionEvent.IncomingTCPTransmissionEventListener, IncomingUDPTransmissionEvent.IncomingUDPTransmissionEventListener {
 
@@ -50,7 +47,9 @@ public class Server extends Thread implements IncomingTCPTransmissionEvent.Incom
     @Override
     public void incomingUDPTransmission(IncomingUDPTransmissionEvent event) {
         logger.info("Incoming UDP transmission with message %s.", event.getMessage());
-        if (event.getMessage().equals(ConnectionManager.QUERY_FILES)) {
+        if (event.getMessage().startsWith(ConnectionManager.QUERY_FILES)) {
+            int port = new Scanner(event.getMessage().substring(ConnectionManager.QUERY_FILES.length())).nextInt();
+            event.getSource().setPort(port);
             executorService.submit(new Acknowledge(connectionManager, event.getSource()));
         } else {
             logger.warn("UDP Message %s ignored.", event.getMessage());

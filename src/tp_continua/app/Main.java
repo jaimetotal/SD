@@ -1,6 +1,8 @@
-package tp_continua;
+package tp_continua.app;
 
 import tp_continua.client.*;
+import tp_continua.common.FileSystem;
+import tp_continua.common.PeerFile;
 import tp_continua.server.Server;
 
 import java.io.File;
@@ -8,13 +10,6 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Scanner;
 
-/**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 03-12-2013
- * Time: 19:47
- * Student Number: 8090309
- */
 public class Main implements DownloadCompletedEvent.DownloadCompletedEventListener, DownloadFailedEvent.DownloadFailedEventListener, QueryCompletedEvent.QueryCompletedEventListener, QueryFailedEvent.QueryFailedEventListener {
 
     private Client client;
@@ -22,7 +17,7 @@ public class Main implements DownloadCompletedEvent.DownloadCompletedEventListen
     private FileSystem fs;
 
     public Main() throws IOException {
-        fs = new FileSystem(".");
+        fs = new FileSystem(".\\filesamples");
         server = new Server(fs);
         server.start();
         client = new Client(fs);
@@ -55,7 +50,13 @@ public class Main implements DownloadCompletedEvent.DownloadCompletedEventListen
             System.out.println("1) Consult Files \n2) Download File \n3) Check downloads in progress\n4)Refresh available files\ns) Exit");
             System.out.print("Selection: ");
             Scanner in = new Scanner(System.in);
-            String next = in.next();
+            String next;
+            try {
+                next = in.next();
+            } catch (java.util.NoSuchElementException ex) {
+                next = "s";
+            }
+
             switch (next) {
                 case "1":
                     listFiles();
@@ -92,12 +93,12 @@ public class Main implements DownloadCompletedEvent.DownloadCompletedEventListen
     }
 
     private void listFiles() {
-        if (fs.remoteFiles().isEmpty()) {
+        if (fs.getRemoteFiles().isEmpty()) {
             System.out.println("There isn't any available to download.");
             return;
         }
         int n = 1;
-        for (PeerFile f : fs.remoteFiles()) {
+        for (PeerFile f : fs.getRemoteFiles()) {
             System.out.println(String.format("%d) %s", n, f.getFileName()));
             n++;
         }
@@ -113,7 +114,7 @@ public class Main implements DownloadCompletedEvent.DownloadCompletedEventListen
         String next = in.next();
         switch (next) {
             case "a":
-                for (PeerFile file : fs.remoteFiles()) {
+                for (PeerFile file : fs.getRemoteFiles()) {
                     try {
                         client.getFile(file);
                     } catch (FileAlreadyDownloadingException e) {
@@ -127,11 +128,11 @@ public class Main implements DownloadCompletedEvent.DownloadCompletedEventListen
             default:
                 Integer value = Integer.getInteger(next);
 
-                if (value == null || value <= 0 || fs.listFiles().size() < value) {
+                if (value == null || value <= 0 || fs.getRemoteFiles().size() < value) {
                     System.out.println("Invalid option.");
                 } else {
                     try {
-                        client.getFile((PeerFile) fs.remoteFiles().toArray()[value - 1]);
+                        client.getFile((PeerFile) fs.getRemoteFiles().toArray()[value - 1]);
                     } catch (FileAlreadyDownloadingException e) {
                         System.out.println("SYSTEM: File is already downloading...");
                     }

@@ -1,13 +1,9 @@
-package tp_continua;
+package tp_continua.common;
 
 import java.net.InetAddress;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 12-11-2013
- * Time: 21:07
- * Student Number: 8090309
+ * Representation of a node in the network
  */
 public class Peer {
 
@@ -25,6 +21,14 @@ public class Peer {
 
     public String getAddress() {
         return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
     @Override

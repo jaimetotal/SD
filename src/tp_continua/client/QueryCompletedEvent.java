@@ -1,7 +1,7 @@
 package tp_continua.client;
 
-import tp_continua.Index;
-import tp_continua.Peer;
+import tp_continua.common.Index;
+import tp_continua.common.Peer;
 
 import java.util.EventListener;
 import java.util.EventObject;

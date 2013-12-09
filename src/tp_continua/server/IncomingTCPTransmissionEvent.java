@@ -1,6 +1,6 @@
 package tp_continua.server;
 
-import tp_continua.Peer;
+import tp_continua.common.Peer;
 
 import java.io.BufferedReader;
 import java.net.Socket;

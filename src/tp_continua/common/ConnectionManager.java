@@ -1,4 +1,4 @@
-package tp_continua;
+package tp_continua.common;
 
 import org.apache.commons.io.IOUtils;
 
@@ -14,8 +14,8 @@ public class ConnectionManager {
     public static int SERVER_TCP_PORT = 7123;
     public static int CLIENT_UDP_PORT = 7712;
     public static int MULTICAST_TIMEOUT = 1000;
-    public static String MULTICAST_ADDRESS = "230.0.0.1";
-    public static int MULTICAST_PORT = 4456;
+    private static String MULTICAST_ADDRESS = "230.0.0.1";
+    private static int MULTICAST_PORT = 4456;
     public static boolean DUNGEON_MASTER = false;
     private static final InternalLogger logger = InternalLogger.getLogger(ConnectionManager.class);
 
@@ -117,6 +117,22 @@ public class ConnectionManager {
         InetAddress address = InetAddress.getByName(ConnectionManager.MULTICAST_ADDRESS);
         socket.joinGroup(address);
         return socket;
+    }
+
+    /**
+     * Based on http://stackoverflow.com/questions/2406341/how-to-check-if-an-ip-address-is-the-local-host-on-a-multi-homed-system
+     */
+    public static boolean isThisMyIpAddress(InetAddress addr) {
+        // Check if the address is a valid special local or loop back
+        if (addr.isAnyLocalAddress() || addr.isLoopbackAddress())
+            return true;
+
+        // Check if the address is defined on any interface
+        try {
+            return NetworkInterface.getByInetAddress(addr) != null;
+        } catch (SocketException e) {
+            return false;
+        }
     }
 
 }

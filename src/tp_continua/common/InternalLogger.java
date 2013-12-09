@@ -1,4 +1,4 @@
-package tp_continua;
+package tp_continua.common;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,6 +1,6 @@
 package tp_continua.client;
 
-import tp_continua.PeerFile;
+import tp_continua.common.PeerFile;
 
 import java.util.EventListener;
 import java.util.EventObject;

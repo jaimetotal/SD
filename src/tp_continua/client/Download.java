@@ -1,8 +1,8 @@
 package tp_continua.client;
 
-import tp_continua.ConnectionManager;
-import tp_continua.InternalLogger;
-import tp_continua.PeerFile;
+import tp_continua.common.ConnectionManager;
+import tp_continua.common.InternalLogger;
+import tp_continua.common.PeerFile;
 
 import java.io.IOException;
 
@@ -40,6 +40,7 @@ public class Download implements Runnable {
             ConnectionManager.downloadContent(peerFile.getDestinationStream(), peerFile.getNode(), token);
             client.downloadCompleted(new DownloadCompletedEvent(peerFile));
         } catch (IOException e) {
+            logger.error(e, "Error while downloading.");
             client.downloadFailed(new DownloadFailedEvent(peerFile, "Error from server while trying downloading file."));
         }
 

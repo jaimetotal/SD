@@ -1,4 +1,4 @@
-package tp_continua;
+package tp_continua.common;
 
 
 import java.io.File;
@@ -44,17 +44,33 @@ public class FileSystem {
     }
 
     public void addFile(PeerFile peerFile) {
-        logger.info("Adding file %s from %s.", peerFile, peerFile.getNode());
         if (!peerFiles.contains(peerFile)) {
+            logger.info("Adding file %s from %s.", peerFile, peerFile.getNode());
             peerFiles.add(peerFile);
+        } else {
+            logger.info("File %s from %s already exists locally.", peerFile, peerFile.getNode());
         }
     }
 
-    public Collection<PeerFile> listFiles() {
-        return peerFiles;
+    /**
+     * All available files in filesystem
+     *
+     * @return
+     */
+    public Collection<PeerFile> getLocalFiles() {
+        ArrayList<PeerFile> list = new ArrayList<>();
+        for (PeerFile f : peerFiles) {
+            if (f.isLocal()) {
+                list.add(f);
+            }
+        }
+        return list;
     }
 
-    public Collection<PeerFile> remoteFiles() {
+    /**
+     * @return Files available to download in remote Peers
+     */
+    public Collection<PeerFile> getRemoteFiles() {
         ArrayList<PeerFile> list = new ArrayList<>();
         for (PeerFile f : peerFiles) {
             if (!f.isLocal()) {
@@ -65,7 +81,7 @@ public class FileSystem {
     }
 
     public Index getIndex() {
-        return new Index(peerFiles);
+        return new Index(getLocalFiles());
     }
 
     /**
@@ -76,7 +92,7 @@ public class FileSystem {
      */
     public void addRemoteIndex(Peer source, Index index) {
         for (String fileName : index.getFilesName()) {
-            PeerFile peerFile = new PeerFile(fileName, source, path + "\\YELLOW");
+            PeerFile peerFile = new PeerFile(fileName, source, path);
             addFile(peerFile);
         }
     }
@@ -96,7 +112,7 @@ public class FileSystem {
 
         logger.info("Saving file %s to disk.", source);
         if (!source.isLocal() && !source.isPreview()) {
-            source.writeToDisk(path + "\\YELLOW");
+            source.writeToDisk(path);
         }
     }
 }

@@ -1,16 +1,12 @@
 package tp_continua.client;
 
-import tp_continua.PeerFile;
+import tp_continua.common.PeerFile;
 
 import java.util.EventListener;
 import java.util.EventObject;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 12-11-2013
- * Time: 21:55
- * Student Number: 8090309
+ * Event for when a download fails
  */
 public class DownloadFailedEvent extends EventObject {
     private final String message;

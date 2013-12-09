@@ -1,9 +1,9 @@
 package tp_continua.client;
 
-import tp_continua.ConnectionManager;
-import tp_continua.Index;
-import tp_continua.InternalLogger;
-import tp_continua.Peer;
+import tp_continua.common.ConnectionManager;
+import tp_continua.common.Index;
+import tp_continua.common.InternalLogger;
+import tp_continua.common.Peer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -41,9 +41,9 @@ public class QueryFiles implements Runnable {
         DatagramSocket responseSocket = null;
         try {
             logger.info("Starting File querying");
-
-            logger.info("Sending multicast message: %s ", ConnectionManager.QUERY_FILES);
-            ConnectionManager.sendMulticast(ConnectionManager.QUERY_FILES);
+            String message = String.format("%s %d", ConnectionManager.QUERY_FILES, ConnectionManager.CLIENT_UDP_PORT);
+            logger.info("Sending multicast message: %s ", message);
+            ConnectionManager.sendMulticast(message);
             //Receives ConnectionManager.QUERY_FILES_ACK + PORT SIZE + \n
             byte[] responseBuf = new byte[ConnectionManager.QUERY_FILES_ACK.length() + 5];
             DatagramPacket packet = new DatagramPacket(responseBuf, responseBuf.length);

@@ -1,4 +1,4 @@
-package tp_continua;
+package tp_continua.common;
 
 import java.io.*;
 import java.nio.file.Files;

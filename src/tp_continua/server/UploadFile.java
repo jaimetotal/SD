@@ -1,9 +1,9 @@
 package tp_continua.server;
 
-import tp_continua.ConnectionManager;
-import tp_continua.FileSystem;
-import tp_continua.InternalLogger;
-import tp_continua.PeerFile;
+import tp_continua.common.ConnectionManager;
+import tp_continua.common.FileSystem;
+import tp_continua.common.InternalLogger;
+import tp_continua.common.PeerFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;

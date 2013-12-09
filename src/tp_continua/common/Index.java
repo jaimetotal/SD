@@ -1,26 +1,21 @@
-package tp_continua;
+package tp_continua.common;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 17-11-2013
- * Time: 23:31
- * Student Number: 8090309
+ * Indexer of available files to download
  */
 public class Index implements Serializable {
 
     private List<String> filesName;
 
-    public Index(List<PeerFile> peerFiles) {
+    public Index(Collection<PeerFile> peerFiles) {
         filesName = new ArrayList<String>();
         for (PeerFile peerFile : peerFiles) {
-            if (peerFile.isLocal()) {
-                this.filesName.add(peerFile.getFileName());
-            }
+            this.filesName.add(peerFile.getFileName());
         }
     }
 

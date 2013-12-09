@@ -1,8 +1,8 @@
 package tp_continua.server;
 
-import tp_continua.ConnectionManager;
-import tp_continua.InternalLogger;
-import tp_continua.Peer;
+import tp_continua.common.ConnectionManager;
+import tp_continua.common.InternalLogger;
+import tp_continua.common.Peer;
 
 import java.io.BufferedReader;
 import java.io.IOException;

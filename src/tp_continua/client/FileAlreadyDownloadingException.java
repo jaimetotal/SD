@@ -1,6 +1,6 @@
 package tp_continua.client;
 
-import tp_continua.PeerFile;
+import tp_continua.common.PeerFile;
 
 /**
  * Exception to report when a file's download is already in progress and another of the same was requested

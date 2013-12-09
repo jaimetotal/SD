@@ -1,8 +1,8 @@
 package tp_continua.client;
 
-import tp_continua.FileSystem;
-import tp_continua.InternalLogger;
-import tp_continua.PeerFile;
+import tp_continua.common.FileSystem;
+import tp_continua.common.InternalLogger;
+import tp_continua.common.PeerFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -123,7 +123,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      */
     @Override
     public void downloadFailed(DownloadFailedEvent e) {
-        logger.info("Download failed for %s." + e.getSource());
+        logger.info("Download failed for %s.", e.getSource());
         filesDownloading.remove(e.getSource());
         for (DownloadFailedEvent.DownloadFailedEventListener listener : downloadFailedEventListeners) {
             listener.downloadFailed(e);
@@ -137,7 +137,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      */
     @Override
     public void queryCompleted(QueryCompletedEvent e) {
-        logger.info("QueryCompletedEvent received from " + e.getSource());
+        logger.info("QueryCompletedEvent received from %s.", e.getSource());
         fileSystem.addRemoteIndex(e.getSource(), e.getIndex());
         for (QueryCompletedEvent.QueryCompletedEventListener listener : queryCompletedEventListener) {
             listener.queryCompleted(e);
@@ -151,7 +151,7 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      */
     @Override
     public void queryFailed(QueryFailedEvent e) {
-        logger.info("QueryFailedEvent received from " + e.getSource());
+        logger.info("QueryFailedEvent received from %s", e.getSource());
         for (QueryFailedEvent.QueryFailedEventListener listener : queryFailedEventListeners) {
             listener.queryFailed(e);
         }
