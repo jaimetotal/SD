@@ -3,6 +3,7 @@ package tp_continua.client;
 import tp_continua.common.ConnectionManager;
 import tp_continua.common.InternalLogger;
 import tp_continua.common.PeerFile;
+import tp_continua.common.Protocol;
 
 import java.io.IOException;
 
@@ -34,7 +35,7 @@ public class Download implements Runnable {
     @Override
     public void run() {
         logger.info("Trying to download %s from %s.", peerFile, peerFile.getNode());
-        String token = String.format("%s\n%s", ConnectionManager.DOWNLOAD_FILE, peerFile.getFileName());
+        String token = String.format("%s\n%s", Protocol.DOWNLOAD_FILE, peerFile.getFileName());
 
         try {
             ConnectionManager.downloadContent(peerFile.getDestinationStream(), peerFile.getNode(), token);

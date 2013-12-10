@@ -4,7 +4,6 @@ import tp_continua.common.FileSystem;
 import tp_continua.common.InternalLogger;
 import tp_continua.common.PeerFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -13,19 +12,23 @@ import java.util.concurrent.*;
 /**
  * Client responsible for querying files available in network and downloading them
  */
-public class Client extends Thread implements DownloadCompletedEvent.DownloadCompletedEventListener, DownloadFailedEvent.DownloadFailedEventListener, DownloadManagerDispatcher, QueryDispatcher, QueryFailedEvent.QueryFailedEventListener, QueryCompletedEvent.QueryCompletedEventListener {
+public class Client extends Thread implements DownloadCompletedEvent.DownloadCompletedEventListener, DownloadFailedEvent.DownloadFailedEventListener, DownloadManagerDispatcher, QueryDispatcher, QueryFailedEvent.QueryFailedEventListener, QueryCompletedEvent.QueryCompletedEventListener, AuthResponseEvent.AuthResponseEventListener, AuthFailedEvent.AuthFailedEventListener {
 
+    private final String authUser;
+    private final String authPass;
     private ExecutorService executorService;
     private FileSystem fileSystem;
     private List<DownloadCompletedEvent.DownloadCompletedEventListener> downloadCompletedEventListener;
     private List<DownloadFailedEvent.DownloadFailedEventListener> downloadFailedEventListeners;
     private List<QueryCompletedEvent.QueryCompletedEventListener> queryCompletedEventListener;
     private List<QueryFailedEvent.QueryFailedEventListener> queryFailedEventListeners;
+    private List<AuthResponseEvent.AuthResponseEventListener> authResponseEventListeners;
+    private List<AuthFailedEvent.AuthFailedEventListener> authFailedEventListeners;
     private BlockingQueue<Runnable> threadQueue;
     private ConcurrentHashMap<PeerFile, Future<?>> filesDownloading;
 
     private static final short THREADQUEUE_MAXSIZE = 10;
-    private static final short THREADPOOL_MAXSIZE = 5;
+    private static final short THREADPOOL_MAXSIZE = 20;
     private static final short MULTICAST_TIMEOUT = 10;
     private InternalLogger logger;
 
@@ -33,8 +36,12 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      * Construtor of Client
      *
      * @param fileSystem Filesystem used to save files and receive logical files location
+     * @param helloUser
+     * @param helloPass
      */
-    public Client(FileSystem fileSystem) {
+    public Client(FileSystem fileSystem, String helloUser, String helloPass) {
+        this.authUser = helloUser;
+        this.authPass = helloPass;
         logger = InternalLogger.getLogger(this.getClass());
         threadQueue = new ArrayBlockingQueue<Runnable>(THREADQUEUE_MAXSIZE);
         this.executorService = new ThreadPoolExecutor(THREADPOOL_MAXSIZE, THREADPOOL_MAXSIZE, Long.MAX_VALUE, TimeUnit.DAYS, threadQueue);
@@ -44,6 +51,8 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
         this.queryCompletedEventListener = new ArrayList<QueryCompletedEvent.QueryCompletedEventListener>();
         this.queryFailedEventListeners = new ArrayList<QueryFailedEvent.QueryFailedEventListener>();
         this.filesDownloading = new ConcurrentHashMap<PeerFile, Future<?>>();
+        this.authResponseEventListeners = new ArrayList<>();
+        this.authFailedEventListeners = new ArrayList<>();
     }
 
     /**
@@ -104,13 +113,8 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
      */
     @Override
     public void downloadCompleted(DownloadCompletedEvent e) {
-        logger.info("Download completed for %s." + e.getSource());
+        logger.info("Download completed for %s.", e.getSource());
         filesDownloading.remove(e.getSource());
-        try {
-            fileSystem.updateFile(e.getSource());
-        } catch (IOException ex) {
-            downloadFailed(new DownloadFailedEvent(e.getSource(), "Error saving file to disk."));
-        }
         for (DownloadCompletedEvent.DownloadCompletedEventListener listener : downloadCompletedEventListener) {
             listener.downloadCompleted(e);
         }
@@ -201,4 +205,21 @@ public class Client extends Thread implements DownloadCompletedEvent.DownloadCom
         return filesDownloading.keys();
     }
 
+    public void authenticate() {
+        executorService.submit(new AuthRequest(this, authUser, authPass));
+    }
+
+    @Override
+    public void authFailed(AuthFailedEvent e) {
+        for (AuthFailedEvent.AuthFailedEventListener listener : authFailedEventListeners) {
+            authFailed(e);
+        }
+    }
+
+    @Override
+    public void authResponse(AuthResponseEvent e) {
+        for (AuthResponseEvent.AuthResponseEventListener listener : authResponseEventListeners) {
+            listener.authResponse(e);
+        }
+    }
 }

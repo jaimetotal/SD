@@ -5,13 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 12-11-2013
- * Time: 21:07
- * Student Number: 8090309
- */
 public class PeerFile {
 
     private String fileName;

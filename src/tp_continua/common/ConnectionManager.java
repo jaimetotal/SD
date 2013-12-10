@@ -8,9 +8,7 @@ import java.util.Properties;
 
 public class ConnectionManager {
 
-    public static final String QUERY_FILES = "QUERY_FILES";
-    public static final String QUERY_FILES_ACK = "QUERY_FILES_ACK";
-    public static final String DOWNLOAD_FILE = "DOWNLOAD_FILE";
+
     public static int SERVER_TCP_PORT = 7123;
     public static int CLIENT_UDP_PORT = 7712;
     public static int MULTICAST_TIMEOUT = 1000;
@@ -135,4 +133,28 @@ public class ConnectionManager {
         }
     }
 
+    public static void listenForUDP(UDPResponseCallBack callBack) throws IOException {
+        DatagramSocket responseSocket = null;
+        //Receives ConnectionManager.QUERY_FILES_ACK + PORT SIZE + \n
+        byte[] responseBuf = new byte[Protocol.QUERY_FILES_ACK.length() + 5];
+        DatagramPacket packet = new DatagramPacket(responseBuf, responseBuf.length);
+
+        responseSocket = ConnectionManager.getUDPSocket(true);
+
+        boolean timeOut = false;
+        while (!timeOut) {
+            try {
+                logger.info("Standing by for any response");
+
+                responseSocket.receive(packet);
+                String messageReceived = new String(packet.getData());
+                logger.info("Message received from %s:%s: %s.", packet.getAddress(), packet.getPort(), messageReceived);
+                callBack.messageReceived(messageReceived, new Peer(packet.getAddress(), packet.getPort()));
+
+
+            } catch (java.net.SocketTimeoutException ex) {
+                timeOut = true;
+            }
+        }
+    }
 }

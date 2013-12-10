@@ -3,6 +3,7 @@ package tp_continua.server;
 import tp_continua.common.ConnectionManager;
 import tp_continua.common.InternalLogger;
 import tp_continua.common.Peer;
+import tp_continua.common.Protocol;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -35,7 +36,7 @@ public class Acknowledge implements Runnable {
      */
     @Override
     public void run() {
-        String message = String.format("%s %s", ConnectionManager.QUERY_FILES_ACK, ConnectionManager.SERVER_TCP_PORT);
+        String message = String.format("%s %s", Protocol.QUERY_FILES_ACK, ConnectionManager.SERVER_TCP_PORT);
         logger.info("Sending ACK to %s in %s format.", source, message);
         byte[] buf = message.getBytes();
         try (DatagramSocket socket = connectionManager.getUDPSocket(false)) {

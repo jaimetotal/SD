@@ -1,12 +1,9 @@
 package tp_continua.common;
 
-/**
- * Created with IntelliJ IDEA.
- * User: AntónioJaime
- * Date: 12-11-2013
- * Time: 21:07
- * Student Number: 8090309
- */
 public class UserManagement {
+
+    public boolean isValid(String user, String password) {
+        return true;
+    }
 
 }

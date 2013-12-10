@@ -1,14 +1,10 @@
 package tp_continua.client;
 
-import tp_continua.common.ConnectionManager;
-import tp_continua.common.Index;
-import tp_continua.common.InternalLogger;
-import tp_continua.common.Peer;
+import tp_continua.common.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.Scanner;
 
@@ -41,32 +37,20 @@ public class QueryFiles implements Runnable {
         DatagramSocket responseSocket = null;
         try {
             logger.info("Starting File querying");
-            String message = String.format("%s %d", ConnectionManager.QUERY_FILES, ConnectionManager.CLIENT_UDP_PORT);
+            String message = String.format("%s %d", Protocol.QUERY_FILES, ConnectionManager.CLIENT_UDP_PORT);
             logger.info("Sending multicast message: %s ", message);
             ConnectionManager.sendMulticast(message);
-            //Receives ConnectionManager.QUERY_FILES_ACK + PORT SIZE + \n
-            byte[] responseBuf = new byte[ConnectionManager.QUERY_FILES_ACK.length() + 5];
-            DatagramPacket packet = new DatagramPacket(responseBuf, responseBuf.length);
-
-            responseSocket = ConnectionManager.getUDPSocket(true);
-
-            boolean timeOut = false;
-            while (!timeOut) {
-                try {
-                    logger.info("Standing by for any response");
-
-                    responseSocket.receive(packet);
-                    String messageReceived = new String(packet.getData());
-                    logger.info("Message received from %s:%s: %s.", packet.getAddress(), packet.getPort(), messageReceived);
-                    if (messageReceived.startsWith(ConnectionManager.QUERY_FILES_ACK)) {
-                        int port = new Scanner(messageReceived.substring(ConnectionManager.QUERY_FILES_ACK.length())).nextInt();
-                        logger.info("Port available to fetch files' list: " + port);
-                        new Thread(new FetchList(new Peer(packet.getAddress(), port))).start();
+            ConnectionManager.listenForUDP(new UDPResponseCallBack() {
+                @Override
+                public void messageReceived(String messageReceived, Peer peer) {
+                    if (messageReceived.startsWith(Protocol.QUERY_FILES_ACK)) {
+                        int port = new Scanner(messageReceived.substring(Protocol.QUERY_FILES_ACK.length())).nextInt();
+                        logger.info("Port available to fetch files' list: %d", port);
+                        peer.setPort(port);
+                        new Thread(new FetchList(peer)).start();
                     }
-                } catch (java.net.SocketTimeoutException ex) {
-                    timeOut = true;
                 }
-            }
+            });
         } catch (Exception e) {
             logger.error(e, "Error while waiting for responses.");
             client.queryFailed(new QueryFailedEvent());
@@ -95,7 +79,7 @@ public class QueryFiles implements Runnable {
         public void run() {
             logger.info("Parsing files' list");
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ConnectionManager.downloadContent(out, node, ConnectionManager.QUERY_FILES);
+            ConnectionManager.downloadContent(out, node, Protocol.QUERY_FILES);
 
             try (ByteArrayInputStream stream = new ByteArrayInputStream(out.toByteArray())) {
                 ObjectInputStream objectInputStream = new ObjectInputStream(stream);

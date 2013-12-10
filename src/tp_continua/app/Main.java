@@ -1,6 +1,7 @@
 package tp_continua.app;
 
 import tp_continua.client.*;
+import tp_continua.common.AuthResponse;
 import tp_continua.common.FileSystem;
 import tp_continua.common.PeerFile;
 import tp_continua.server.Server;
@@ -10,7 +11,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Scanner;
 
-public class Main implements DownloadCompletedEvent.DownloadCompletedEventListener, DownloadFailedEvent.DownloadFailedEventListener, QueryCompletedEvent.QueryCompletedEventListener, QueryFailedEvent.QueryFailedEventListener {
+public class Main implements DownloadCompletedEvent.DownloadCompletedEventListener, DownloadFailedEvent.DownloadFailedEventListener, QueryCompletedEvent.QueryCompletedEventListener, QueryFailedEvent.QueryFailedEventListener, AuthFailedEvent.AuthFailedEventListener, AuthResponseEvent.AuthResponseEventListener {
 
     private Client client;
     private Server server;
@@ -20,14 +21,15 @@ public class Main implements DownloadCompletedEvent.DownloadCompletedEventListen
         fs = new FileSystem(".\\filesamples");
         server = new Server(fs);
         server.start();
-        client = new Client(fs);
+        client = new Client(fs, "HelloUser", "HelloPass");
         client.start();
         client.addDownloadCompletedEventListener(this);
         client.addDownloadFailedEventListener(this);
         client.addQueryCompletedEventListener(this);
         client.addQueryFailedEventListener(this);
-        client.queryNetwork();
-        displayMenu();
+        //client.authenticate();
+        //TODO Implement server's AuthConfirmation
+        client.authResponse(new AuthResponseEvent(null, AuthResponse.OK));
     }
 
     public static void main(String[] args) throws IOException {
@@ -71,7 +73,7 @@ public class Main implements DownloadCompletedEvent.DownloadCompletedEventListen
                     queryNetwork();
                     break;
                 case "s":
-                    exit = true;
+                    System.exit(0);
                     break;
                 default:
                     System.out.println("Invalid option.");
@@ -162,5 +164,22 @@ public class Main implements DownloadCompletedEvent.DownloadCompletedEventListen
         if (e.getSource() == null) {
             System.out.println("SYSTEM: Failed to obtain files to download. Try again later.");
         }
+    }
+
+    @Override
+    public void authFailed(AuthFailedEvent e) {
+        System.out.println("Couldn't connect to any dungeon master.");
+    }
+
+    @Override
+    public void authResponse(AuthResponseEvent e) {
+        if (e.getResponse() == AuthResponse.NOK) {
+            System.out.println("Couldn't authenticate with any dungeon master.");
+        } else {
+            client.queryNetwork();
+            displayMenu();
+        }
+
+
     }
 }
